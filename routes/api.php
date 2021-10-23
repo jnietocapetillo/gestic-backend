@@ -20,7 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 /* rutas para login usuarios */
 
-Route::post('/login','App\Http\Controllers\UsuarioController@login');
+Route::middleware('cors')->post('/login','App\Http\Controllers\UsuarioController@login');
 
 Route::get('/usuarios', 'App\Http\Controllers\UsuarioController@listado');
 

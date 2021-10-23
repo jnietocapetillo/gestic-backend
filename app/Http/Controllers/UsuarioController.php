@@ -14,20 +14,28 @@ class UsuarioController extends Controller
 
     function login(Request $request)
     {
-
+        $datos = json_decode($request);
+        return ($request);
         $usuario = User::where('email',$request->email)->where('password',$request->password)->first();
         
         $usuario_json = json_decode($usuario);
         
-        if (empty($usuario_json))
+        if (empty($usuario))
+        {
             $resultado=201;
-        else $resultado = 200;
+            $mensaje=$usuario;
+        }
+        else
+        {
+            $resultado = 200;
+            $mensaje = $usuario_json;
+        } 
 
         $response = [
             'estado'=>$resultado,
-            'usuario' => $usuario_json
+            'usuario' => $mensaje
         ];
-       
+        
         return ($response);
     }
 
