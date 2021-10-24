@@ -14,29 +14,33 @@ class UsuarioController extends Controller
 
     function login(Request $request)
     {
-        $datos = json_decode($request);
-        return ($request);
-        $usuario = User::where('email',$request->email)->where('password',$request->password)->first();
+        header('Access-Control-Allow-Origin: *'); 
+        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+
+        $json = file_get_contents('php://input');
+        $datos = json_decode($json);
         
-        $usuario_json = json_decode($usuario);
+        
+        $usuario = User::where('email',$datos->email)->where('password',$datos->password)->first();
         
         if (empty($usuario))
         {
             $resultado=201;
-            $mensaje=$usuario;
+            $mensaje='Correo / password incorrecto';
         }
         else
         {
             $resultado = 200;
-            $mensaje = $usuario_json;
+            $mensaje = $usuario;
         } 
 
         $response = [
             'estado'=>$resultado,
-            'usuario' => $mensaje
+            'datos' => $mensaje
         ];
-        
-        return ($response);
+
+        header('Content-Type: application/json');
+        return json_encode($response);
     }
 
     function vistaLogin()
