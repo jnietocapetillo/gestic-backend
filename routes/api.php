@@ -28,6 +28,10 @@ Route::post('/usuarios', 'App\Http\Controllers\UsuarioController@addUsuario');
 
 Route::get('/usuarios/{id}','App\Http\Controllers\UsuarioController@detalle');
 
+Route::put('/usuarios/{id}','App\Http\Controllers\UsuarioController@actualizarUsuario');
+
+Route::delete('/usuarios/{id}','App\Http\Controllers\UsuarioController@deleteUsuario');
+
 /* rutas para incidencias */
 
 Route::get('/incidencias','App\Http\Controllers\IncidenciaController@listado');

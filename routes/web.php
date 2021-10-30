@@ -20,15 +20,22 @@ Route::get('/', function () {
 });
 
 /* rutas para login usuarios */
-Route::get('/login','App\Http\Controllers\UsuarioController@vistaLogin');
 
-Route::post('/login','App\Http\Controllers\UsuarioController@login')->name('login');
+Route::post('/login','App\Http\Controllers\UsuarioController@login');
+
+Route::post('/usuarios/reset', 'App\Http\Controllers\UsuarioController@resetPassword');
 
 Route::get('/usuarios', 'App\Http\Controllers\UsuarioController@listado');
 
 Route::post('/usuarios', 'App\Http\Controllers\UsuarioController@addUsuario');
 
+Route::post('/usuarios/id', 'App\Http\Controllers\UsuarioController@idUsuario');
+
 Route::get('/usuarios/{id}','App\Http\Controllers\UsuarioController@detalle');
+
+Route::put('/usuarios/{id}','App\Http\Controllers\UsuarioController@actualizarUsuario');
+
+Route::delete('/usuarios/{id}','App\Http\Controllers\UsuarioController@deleteUsuario');
 
 /* rutas para incidencias */
 
