@@ -45,9 +45,28 @@ class IncidenciaController extends Controller
     /**
         función que agrega una nueva incidencia
    */
-    function addIncidencias()
+    function addIncidencia(Request $request)
     {
-        //
+        header('Access-Control-Allow-Origin: *'); 
+        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+
+        $json = file_get_contents('php://input');
+        $datos = json_decode($json);
+
+        $nueva_incidencia = Incidencia::insert([
+            'idusuario' => $datos->idusuario,
+            'tecnico_asignado' => $datos ->tecnico_asignado,
+            'fecha' => $datos->fecha,
+            'prioridad' =>$datos->prioridad,
+            'estado' => $datos-> estado,
+            'titulo' => $datos->titulo,
+            'ubicacion' =>$datos -> ubicacion,
+            'descripcion' => $datos -> descripcion
+        ]);
+
+        $respuesta = [ 'estado' =>200, 'incidencia' => $nueva_incidencia];
+        header('Content-Type: application/json');
+        return json_encode($respuesta); 
     }
     /**
         funcion que actualiza una incidencia pasada por metodo PUT

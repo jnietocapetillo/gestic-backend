@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use DateTime;
+use Illuminate\Database\DBAL\TimestampType;
 use PHPUnit\Util\Json;
 
 class UsuarioController extends Controller
@@ -99,14 +101,6 @@ class UsuarioController extends Controller
     }
 
     /**
-        funcion que agrega un usuario 
-    */
-    function addUsuario()
-    {
-        //
-    }
-
-    /**
         funcion que elimina un usuario indicado por idusuario
      */
     function deleteUsuario($id){
@@ -114,9 +108,9 @@ class UsuarioController extends Controller
     }
 
     /**
-    Funcion que devulve el id de un usuario a través de su correo
+    Funcion que devuelve el id de un usuario a través de su correo
      */
-    function idUsuario(Request $request)
+    function idUsuarioEmail(Request $request)
     {
         header('Access-Control-Allow-Origin: *'); 
         header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
@@ -128,7 +122,28 @@ class UsuarioController extends Controller
         if (!empty($id_usuario))
             $respuesta = $id_usuario->idusuario;
         else    
-            $respuesta = -1;
+            $respuesta = 201;
+        
+        header('Content-Type: application/json');
+        return json_encode($respuesta);
+    }
+
+    /**
+    Funcion que devuelve el id de un usuario a través de su perfil
+     */
+    function idUsuarioPerfil(Request $request)
+    {
+        header('Access-Control-Allow-Origin: *'); 
+        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+
+        $json = file_get_contents('php://input');
+        $datos = json_decode($json);
+        $id_usuario = User::where('perfil',$datos->perfil)->first();
+
+        if (!empty($id_usuario))
+            $respuesta = $id_usuario->idusuario;
+        else    
+            $respuesta = 201;
         
         header('Content-Type: application/json');
         return json_encode($respuesta);
@@ -156,6 +171,51 @@ class UsuarioController extends Controller
         $respuesta = [ 'estado' =>$estado];
         header('Content-Type: application/json');
         return json_encode($respuesta);
+    }
+
+    /**
+        funcion que inserta un nuevo usuario pasado por post
+     */
+    function addUsuario(Request $request)
+    {
+        header('Access-Control-Allow-Origin: *'); 
+        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+
+        $json = file_get_contents('php://input');
+        $datos = json_decode($json);
+
+        $existeUser = User::where('email',$datos->email)->first();
+        
+        if ($existeUser == null)
+        {
+            $fecha = new DateTime();
+            $estado = 200;
+            //insertamos usuario
+            $addUser = User::insert([
+                'nombre' => $datos->nombre,
+                'apellidos' => $datos ->apellidos,
+                'dni' => $datos -> dni,
+                'email' => $datos ->email,
+                'password' => $datos->password,
+                'activo' => 0,
+                'departamento' =>$datos->departamento,
+                'perfil' => $datos->perfil,
+                'movil' => $datos -> movil,
+                'domicilio' => $datos ->domicilio,
+                'localidad' => $datos ->localidad,
+                'municipio' => $datos->provincia,
+                'codigo_postal' =>$datos -> codigo_postal,
+                'avatar' =>''
+            ]);
+            
+        }
+        else    
+        {
+            $estado = 202;
+        }
+        $respuesta = [ 'estado' =>$estado];
+        header('Content-Type: application/json');
+        return json_encode($respuesta); 
     }
    
 }

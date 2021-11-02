@@ -29,7 +29,11 @@ Route::get('/usuarios', 'App\Http\Controllers\UsuarioController@listado');
 
 Route::post('/usuarios', 'App\Http\Controllers\UsuarioController@addUsuario');
 
-Route::post('/usuarios/id', 'App\Http\Controllers\UsuarioController@idUsuario');
+Route::post('/usuarios/idEmail', 'App\Http\Controllers\UsuarioController@idUsuarioEmail');
+
+Route::post('/usuario/idPerfil','App\Http\Controllers\UsuarioController@idUsuarioPerfil' );
+
+Route::post('/usuarios/add','App\Http\Controllers\UsuarioController@addUsuario');
 
 Route::get('/usuarios/{id}','App\Http\Controllers\UsuarioController@detalle');
 
@@ -41,7 +45,7 @@ Route::delete('/usuarios/{id}','App\Http\Controllers\UsuarioController@deleteUsu
 
 Route::get('/incidencias','App\Http\Controllers\IncidenciaController@listado');
 
-Route::post('/incidencias','App\Http\Controllers\IncidenciaController@addIncidencia');
+Route::post('/incidencia/add', 'App\Http\Controllers\IncidenciaController@addIncidencia');
 
 Route::get('/incidencias/{id}','App\Http\Controllers\IncidenciaController@detalle');
 
