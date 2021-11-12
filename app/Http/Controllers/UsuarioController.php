@@ -23,19 +23,27 @@ class UsuarioController extends Controller
         $datos = json_decode($json);
         
         
-        $usuario = User::where('email',$datos->email)->where('password',$datos->password)->first();
-        
+        $usuario = User::where('email',$datos->email)->first();
         
         if (empty($usuario))
         {
             $resultado=201;
-            $mensaje='Correo / password incorrecto';
+            $mensaje='Correo incorrecto';
         }
         else
         {
-            $resultado = 200;
-            //una vez que vemos que existe el usuario debemos saber si esta activo o no
-            $mensaje = $usuario;
+            //si existe el usuario veo si coinciden las contraseñas
+            if (password_verify($datos->password,$usuario->password))
+            {
+                $resultado = 200;
+                //una vez que vemos que existe el usuario debemos saber si esta activo o no
+                $mensaje = $usuario;
+            }
+            else 
+            {
+                $resultado=201;
+                $mensaje='Password incorrecta';
+            }
         } 
 
         $response = [
@@ -131,20 +139,17 @@ class UsuarioController extends Controller
     /**
     Funcion que devuelve el id de un usuario a través de su perfil
      */
-    function idUsuarioPerfil(Request $request)
+    function idUsuarioPerfil($id)
     {
-        header('Access-Control-Allow-Origin: *'); 
-        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
 
-        $json = file_get_contents('php://input');
-        $datos = json_decode($json);
-        $id_usuario = User::where('perfil',$datos->perfil)->first();
+        $id_usuario = User::where('idPerfil',$id)->first();
 
         if (!empty($id_usuario))
             $respuesta = $id_usuario->idusuario;
         else    
             $respuesta = 201;
         
+        $respuesta = ['id'=> $respuesta];
         header('Content-Type: application/json');
         return json_encode($respuesta);
     }
@@ -159,8 +164,8 @@ class UsuarioController extends Controller
 
         $json = file_get_contents('php://input');
         $datos = json_decode($json);
-        
-        $resetPassword = User::where('idusuario', $datos->id)->update(['password'=>$datos->password]);
+        $nueva = password_hash($datos->password,PASSWORD_BCRYPT);
+        $resetPassword = User::where('idusuario', $datos->id)->update(['password'=>$nueva]);
 
         if ($resetPassword)
         {
@@ -188,6 +193,7 @@ class UsuarioController extends Controller
         
         if ($existeUser == null)
         {
+            $pass = password_hash($datos->password,PASSWORD_BCRYPT);
             $fecha = new DateTime();
             $estado = 200;
             //insertamos usuario
@@ -196,7 +202,7 @@ class UsuarioController extends Controller
                 'apellidos' => $datos ->apellidos,
                 'dni' => $datos -> dni,
                 'email' => $datos ->email,
-                'password' => $datos->password,
+                'password' => $pass,
                 'activo' => 0,
                 'departamento' =>$datos->departamento,
                 'perfil' => $datos->perfil,
@@ -217,5 +223,15 @@ class UsuarioController extends Controller
         header('Content-Type: application/json');
         return json_encode($respuesta); 
     }
-   
+
+    function nombreTecnico($id)
+    {
+        $nombre = User::where('idusuario',$id)->first();
+
+        return json_encode($nombre->nombre.' '.$nombre->apellidos);
+    }
+
+    
+
+    
 }
