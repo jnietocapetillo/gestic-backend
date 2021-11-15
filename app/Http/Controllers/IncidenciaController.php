@@ -4,11 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\incidencia;
-use Error;
-use GuzzleHttp\Psr7\Message;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Facades\Storage;
-use PhpParser\JsonDecoder;
+
 
 class IncidenciaController extends Controller
 {
@@ -112,7 +108,7 @@ class IncidenciaController extends Controller
         $archivo = $parametros->base64textString;
         $archivo = base64_decode($archivo);
 
-        $ruta = 'D:/gest-laravel/gestic/storage/app/images/'.$nombreArchivo;
+        $ruta = 'D:/gest-laravel/gestic/storage/app/public/'.$nombreArchivo;
 
         file_put_contents($ruta,$archivo);
 
@@ -127,8 +123,56 @@ class IncidenciaController extends Controller
             $respuesta = 201;    
         
         header('Content-Type: application/json');
-        return json_encode($incidencia); 
+        return json_encode($respuesta); 
 
+    }
+
+    function tecnicoIncidencia($id)
+    {
+        $idTecnico = Incidencia::find($id);
+
+        if ($idTecnico != null)
+        {
+            $respuesta = 200;
+            $datos = $idTecnico->tecnico_asignado;
+        }
+        else
+        {
+            $respuesta = 201;
+            $datos = null;
+        }
+
+        $resultado = ['resultado'=>$respuesta, 'datos'=>$datos];
+
+        header('Content-Type: application/json');
+        return json_encode($resultado); 
+
+    }
+
+    /**
+        funcion que devuelve el idusuario de una incidencia a traves de su idincidencia
+     */
+    function idUsuarioIncidencia($id)
+    {
+        $IDusuario = Incidencia::find($id);
+
+        if ($IDusuario == null)
+        {
+            $respuesta = [
+                'estado' => 201,
+                'datos' => null
+            ];
+        }
+        else
+        {
+            $respuesta = [
+                'estado' => 200,
+                'datos' => $IDusuario
+            ];
+        }
+
+        header('Content-Type: application/json');
+        return json_encode($respuesta); 
     }
     /**
         funcion que actualiza una incidencia pasada por metodo PUT

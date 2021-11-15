@@ -2,8 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers;
-
-
+use Illuminate\Http\File;
+use Illuminate\Support\Facades\Storage;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -41,7 +41,9 @@ Route::put('/usuarios/{id}','App\Http\Controllers\UsuarioController@actualizarUs
 
 Route::delete('/usuarios/{id}','App\Http\Controllers\UsuarioController@deleteUsuario');
 
-Route::get('/tecnico/{id}','App\Http\Controllers\UsuarioController@nombreTecnico');
+Route::get('/usuarios/nombre/{id}','App\Http\Controllers\UsuarioController@nombreUsuario');
+
+Route::post('/usuario/imagen', 'App\Http\Controllers\UsuarioController@addImagenUsuario');
 
 
 /* rutas para incidencias */
@@ -56,19 +58,28 @@ Route::get('/incidencia/usuario/{id}','App\Http\Controllers\IncidenciaController
 
 Route::post('/incidencia/imagen','App\Http\Controllers\IncidenciaController@incidenciaImagen');
 
+Route::get('/incidencia/tecnico/{id}','App\Http\Controllers\IncidenciaController@tecnicoIncidencia');
+
+Route::get('incidencia/idincidencia/{id}', 'App\Http\Controllers\IncidenciaController@idUsuarioIncidencia');
+
 /* rutas para logs */
 
 Route::get('/logs','App\Http\Controllers\LogController@listado');
 
 /* borrar */
 Route::get('/formulario','App\Http\Controllers\IncidenciaController@solicitud');
+
 Route::post('/datos','App\Http\Controllers\IncidenciaController@datos')->name('datos');
 
 /** rutas para los mensajes */
 
 Route::post('/mensaje/add', 'App\Http\Controllers\MensajeController@addMensaje');
+Route::post('/mensaje/imagen','App\Http\Controllers\MensajeController@mensajeImagen');
 Route::get('/mensajes/{id}','App\Http\Controllers\MensajeController@mensajesUsuarios' );
+Route::get('/mensaje/{id}','App\Http\Controllers\MensajeController@detalleMensaje');
 Route::get('/mensajes/incidencia/{id}', 'App\Http\Controllers\MensajeController@mensajesIncidencias');
+Route::put('/mensaje/leido/{id}', 'App\Http\Controllers\MensajeController@mensajeLeido');
+
 
 /** rutas para departamentos */
 
@@ -81,4 +92,8 @@ Route::get('/perfiles', 'App\Http\Controllers\PerfilController@perfiles');
 Route::get('/perfil/{id}','App\Http\Controllers\PerfilController@perfilUsuario');
 Route::get('/perfil/nombre/{nombre}','App\Http\Controllers\PerfilController@perfilNombre');
 
-Route::get('/prueba','App\Http\Controllers\IncidenciaController@prueba');
+/** ruta para solicitar imagen */
+Route::get('/storage/{imagen}', function ($imagen){
+    
+    return Storage::download($imagen);
+});

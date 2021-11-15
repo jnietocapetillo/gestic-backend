@@ -11,7 +11,7 @@ class DepartamentoController extends Controller
     {
         $departamentos = Departamento::all();
 
-        return $departamentos;
+        return json_encode($departamentos);
     }
 
     function departamentoUsuario($id)

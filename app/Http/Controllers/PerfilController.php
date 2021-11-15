@@ -44,4 +44,12 @@ class PerfilController extends Controller
         
         return json_encode($respuesta);
     }
+
+    function imagenes($nombre)
+    {
+        $ruta = '/storage/app/'.$nombre;
+
+        return response() ->$ruta;
+        //return json_encode('http://gestic/storage/app/images/'.$nombre);
+    }
 }
