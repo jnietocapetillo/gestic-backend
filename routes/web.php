@@ -45,6 +45,7 @@ Route::get('/usuarios/nombre/{id}','App\Http\Controllers\UsuarioController@nombr
 
 Route::post('/usuario/imagen', 'App\Http\Controllers\UsuarioController@addImagenUsuario');
 
+Route::get('usuario/activar/{id}', 'App\Http\Controllers\UsuarioController@activarUsuario');
 
 /* rutas para incidencias */
 
@@ -79,6 +80,7 @@ Route::get('/mensajes/{id}','App\Http\Controllers\MensajeController@mensajesUsua
 Route::get('/mensaje/{id}','App\Http\Controllers\MensajeController@detalleMensaje');
 Route::get('/mensajes/incidencia/{id}', 'App\Http\Controllers\MensajeController@mensajesIncidencias');
 Route::put('/mensaje/leido/{id}', 'App\Http\Controllers\MensajeController@mensajeLeido');
+Route::get('/mensajesnoleidos/{id}', 'App\Http\Controllers\MensajeController@mensajesNoLeidosUsuarios');
 
 
 /** rutas para departamentos */

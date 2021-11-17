@@ -125,6 +125,7 @@ class UsuarioController extends Controller
 
         $json = file_get_contents('php://input');
         $datos = json_decode($json);
+
         $id_usuario = User::where('email',$datos->email)->first();
 
         if (!empty($id_usuario))
@@ -204,14 +205,14 @@ class UsuarioController extends Controller
                 'email' => $datos ->email,
                 'password' => $pass,
                 'activo' => 0,
-                'departamento' =>$datos->departamento,
-                'perfil' => $datos->perfil,
+                'idDepartamento' =>$datos->departamento,
+                'idPerfil' => $datos->perfil,
                 'movil' => $datos -> movil,
                 'domicilio' => $datos ->domicilio,
                 'localidad' => $datos ->localidad,
                 'municipio' => $datos->provincia,
                 'codigo_postal' =>$datos -> codigo_postal,
-                'avatar' =>''
+                'avatar' =>$datos ->imagen
             ]);
             
         }
@@ -224,12 +225,22 @@ class UsuarioController extends Controller
         return json_encode($respuesta); 
     }
 
+    /**
+        funcion que envia el nombre y apellidos del usuario pasado por id 
+     */
     function nombreUsuario($id)
     {
+        header('Access-Control-Allow-Origin: *'); 
+        header("Access-Control-Allow-Headers: *");
+
         $nombre = User::where('idusuario',$id)->first();
 
         return json_encode($nombre->nombre.' '.$nombre->apellidos);
     }
+
+    /**
+        funcion que agrega una imagen al perfil de usuario
+     */
 
     function addImagenUsuario(Request $request)
     {
@@ -251,7 +262,7 @@ class UsuarioController extends Controller
         //actualizamos el campo imagen en la incidencia
 
         $usuario_creado = User::max('idincidencia');
-        $usuario = User::where('idincidencia',$usuario_creado)->update(['imagen'=>$nombreArchivo]);
+        $usuario = User::where('idincidencia',$usuario_creado)->update(['avatar'=>$nombreArchivo]);
         
         if ($usuario)
             $respuesta = 200;
@@ -261,6 +272,28 @@ class UsuarioController extends Controller
         header('Content-Type: application/json');
         return json_encode($respuesta); 
 
+    }
+
+    /**
+        funcion que activa un usuario pasado por id
+     */
+    function activarUsuario($id)
+    {
+        header('Access-Control-Allow-Origin: *'); 
+        header("Access-Control-Allow-Headers: *");
+
+        $usuarioActivo = User::where('idusuario',$id)->update(['activo'=>1]);
+
+        if ($usuarioActivo)
+        {
+            $respuesta = 200;
+        }
+        else
+        {
+            $respuesta = 201;
+        }
+
+        return json_encode($respuesta);
     }
 
     

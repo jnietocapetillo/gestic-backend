@@ -18,11 +18,13 @@ class MensajeController extends Controller
         $json = file_get_contents('php://input');
         $datos = json_decode($json);
         
+        $fecha = Date("Y-m-d H:i:s");
+
         $nuevo_mensaje = Mensaje::insert([
             'idusuario_receptor'=>$datos->idusuario_receptor,
             'idusuario_origen' =>$datos->idusuario_origen,
             'idincidencia' => $datos-> idincidencia,
-            'fecha' => $datos -> fecha,
+            'fecha' => $fecha,
             'descripcion' => $datos -> descripcion,
             'leido' => $datos->leido,
             'imagen' => $datos -> imagen
@@ -82,6 +84,9 @@ class MensajeController extends Controller
      */
     function mensajesUsuarios($dato)
     {
+        header('Access-Control-Allow-Origin: *'); 
+        header("Access-Control-Allow-Headers: *");
+
         $mensajes = Mensaje::where('idusuario_receptor',$dato)->get();
 
         if ($mensajes == null)
@@ -101,8 +106,41 @@ class MensajeController extends Controller
         return json_encode($devolver);
     }
 
+    /**
+        funcion que envia una lista de todos los mensajes no leidos de un usuario especifico
+     */
+    function mensajesNoLeidosUsuarios($dato)
+    {
+        header('Access-Control-Allow-Origin: *'); 
+        header("Access-Control-Allow-Headers: *");
+
+        $mensajes = Mensaje::where('idusuario_receptor',$dato)->where('leido',0)->get();
+
+        if ($mensajes == null)
+        {
+            $devolver = [
+                'mensaje' => 202,
+                'datos' => null
+            ];
+        }
+        else
+        {
+            $devolver = [
+                'mensaje' => 200,
+                'datos' => $mensajes
+            ];
+        }
+        return json_encode($devolver);
+    }
+
+    /**
+        funcion que devuelve un listado de mensajes que estan asociados a un incidencia dada por id
+     */
     function mensajesIncidencias($id)
     {
+        header('Access-Control-Allow-Origin: *'); 
+        header("Access-Control-Allow-Headers: *");
+
         $mensajes = Mensaje::where('idincidencia',$id)->get();
         if ($mensajes == null)
         {
@@ -122,6 +160,9 @@ class MensajeController extends Controller
         return json_encode($devolver);
     }
 
+    /**
+        funcion que marca como leido un mensaje a traves de su id
+     */
     function mensajeLeido($id)
     {
         header('Access-Control-Allow-Origin: *'); 
@@ -140,8 +181,14 @@ class MensajeController extends Controller
         return json_encode($resultado);
     }
 
+    /**
+        devuelve los datos de un mensaje con el id dado
+     */
     function detalleMensaje($id)
     {
+        header('Access-Control-Allow-Origin: *'); 
+        header("Access-Control-Allow-Headers: *");
+
         $mensaje = Mensaje::find($id);
 
         if (!is_null($mensaje))
