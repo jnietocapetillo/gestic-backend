@@ -208,4 +208,23 @@ class MensajeController extends Controller
 
         return json_encode($response);
     }
+
+    function actualizarLeidoPorIncidencia($id)
+    {
+        header('Access-Control-Allow-Origin: *'); 
+        header("Access-Control-Allow-Headers: *");
+
+        $marcarLeido = Mensaje::where('idincidencia',$id)->update(['leido' => 1]);
+
+        if ($marcarLeido)
+        {
+            $respuesta = 200;
+        }
+        else
+        {
+            $respuesta = 201;
+        }
+
+        return json_encode($respuesta);
+    }
 }

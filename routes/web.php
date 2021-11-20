@@ -47,6 +47,8 @@ Route::post('/usuario/imagen', 'App\Http\Controllers\UsuarioController@addImagen
 
 Route::get('usuario/activar/{id}', 'App\Http\Controllers\UsuarioController@activarUsuario');
 
+Route::get('/usuario/tecnicos','App\Http\Controllers\UsuarioController@tecnicosUsuarios' );
+
 /* rutas para incidencias */
 
 Route::get('/incidencias','App\Http\Controllers\IncidenciaController@listado');
@@ -62,6 +64,8 @@ Route::post('/incidencia/imagen','App\Http\Controllers\IncidenciaController@inci
 Route::get('/incidencia/tecnico/{id}','App\Http\Controllers\IncidenciaController@tecnicoIncidencia');
 
 Route::get('incidencia/idincidencia/{id}', 'App\Http\Controllers\IncidenciaController@idUsuarioIncidencia');
+
+Route::post('incidencia/asignar', 'App\Http\Controllers\IncidenciaController@asignarTecnicoPrioridad');
 
 /* rutas para logs */
 
@@ -81,6 +85,7 @@ Route::get('/mensaje/{id}','App\Http\Controllers\MensajeController@detalleMensaj
 Route::get('/mensajes/incidencia/{id}', 'App\Http\Controllers\MensajeController@mensajesIncidencias');
 Route::put('/mensaje/leido/{id}', 'App\Http\Controllers\MensajeController@mensajeLeido');
 Route::get('/mensajesnoleidos/{id}', 'App\Http\Controllers\MensajeController@mensajesNoLeidosUsuarios');
+Route::get('/mensaje/actualizarMensaje/{id}','App\Http\Controllers\MensajeController@actualizarLeidoPorIncidencia' );
 
 
 /** rutas para departamentos */

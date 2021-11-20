@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Perfil;
 use DateTime;
 use Illuminate\Database\DBAL\TimestampType;
 use PHPUnit\Util\Json;
@@ -296,7 +297,16 @@ class UsuarioController extends Controller
         return json_encode($respuesta);
     }
 
-    
+    function tecnicosUsuarios()
+    {
+        header('Access-Control-Allow-Origin: *'); 
+        header("Access-Control-Allow-Headers: *");
 
+        $idTecnico = Perfil::where('nombre','like','Técnico')->first();
+
+        $tecnicos = User::where('idPerfil',$idTecnico->id)->get();
+
+        return json_encode($tecnicos);
+    }
     
 }

@@ -127,6 +127,9 @@ class IncidenciaController extends Controller
 
     }
 
+    /**
+        funcion que devuelve el id del tecnico asignado a una incidencia dada por id
+     */
     function tecnicoIncidencia($id)
     {
         $idTecnico = Incidencia::find($id);
@@ -174,6 +177,33 @@ class IncidenciaController extends Controller
         header('Content-Type: application/json');
         return json_encode($respuesta); 
     }
+
+    /**
+        funcion que asigna un tecnico y una prioridad a una incidencia
+     */
+    function asignarTecnicoPrioridad(Request $request)
+    {
+        header('Access-Control-Allow-Origin: *'); 
+        header("Access-Control-Allow-Headers: *");
+
+        $json = file_get_contents('php://input'); //recibimos el json de angular
+        $parametros = json_decode($json);// decodifica el json y lo guarda en paramentros
+
+        $actualizar = Incidencia::where('idincidencia', $parametros->id)->update(['prioridad'=>$parametros->prioridad, 'tecnico_asignado'=>$parametros->tecnico]);
+
+        if ($actualizar)
+        {
+            $respuesta = 200;
+        }
+        else
+        {
+            $respuesta = 201;
+        }
+
+        return json_encode($respuesta);
+
+    }
+
     /**
         funcion que actualiza una incidencia pasada por metodo PUT
      */
