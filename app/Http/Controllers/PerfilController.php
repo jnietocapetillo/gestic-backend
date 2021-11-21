@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 use App\Models\perfil;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class PerfilController extends Controller
 {
@@ -11,12 +9,18 @@ class PerfilController extends Controller
 
     function perfiles()
     {
+        header('Access-Control-Allow-Origin: *'); 
+        header("Access-Control-Allow-Headers: *");
+
         $perfiles = Perfil::all();
-        return $perfiles;
+        return json_encode($perfiles);
     }
 
     function perfilUsuario($id)
     {
+        header('Access-Control-Allow-Origin: *'); 
+        header("Access-Control-Allow-Headers: *");
+
         $nombrePerfil = Perfil::find($id);
 
         return json_encode($nombrePerfil->nombre);
@@ -24,7 +28,9 @@ class PerfilController extends Controller
 
     function perfilNombre($nombre)
     {
-        
+        header('Access-Control-Allow-Origin: *'); 
+        header("Access-Control-Allow-Headers: *");
+
         $idPerfil = Perfil::where('nombre','like',$nombre)->first();
 
         if ($idPerfil != null)
@@ -47,6 +53,9 @@ class PerfilController extends Controller
 
     function imagenes($nombre)
     {
+        header('Access-Control-Allow-Origin: *'); 
+        header("Access-Control-Allow-Headers: *");
+
         $ruta = '/storage/app/'.$nombre;
 
         return response() ->$ruta;

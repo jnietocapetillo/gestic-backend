@@ -40,18 +40,18 @@ class IncidenciaController extends Controller
                 'datos' => $incidencia
             ];
         }
-        return json_encode($devolver);
-        
+        return json_encode($devolver);   
     }
     /**
         funcion que devuelve las incidencias de un usuario por GET
      */
     function incidenciasUsuario($id){
 
+        header('Access-Control-Allow-Origin: *'); 
+        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+
         $incidencias = Incidencia::where('idusuario',$id)->get();
         return json_encode($incidencias);
-        
-
     }
 
     /**

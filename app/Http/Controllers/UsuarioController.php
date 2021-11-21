@@ -6,8 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Perfil;
 use DateTime;
-use Illuminate\Database\DBAL\TimestampType;
-use PHPUnit\Util\Json;
+
 
 class UsuarioController extends Controller
 {
@@ -61,8 +60,13 @@ class UsuarioController extends Controller
         funcion que nos da todas los usuario de la base de datos
      */
     function listado(){
+
+        header('Access-Control-Allow-Origin: *'); 
+        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+
         $listado = User::all();
-        return($listado);
+
+        return json_encode($listado);
     }
 
     /**
@@ -297,16 +301,26 @@ class UsuarioController extends Controller
         return json_encode($respuesta);
     }
 
+    /**
+        funcion que devuelve los usuarios que son técnicos
+     */
     function tecnicosUsuarios()
     {
         header('Access-Control-Allow-Origin: *'); 
         header("Access-Control-Allow-Headers: *");
 
-        $idTecnico = Perfil::where('nombre','like','Técnico')->first();
+        $idTecnico = Perfil::where('nombre','like','Tecnico')->first();
 
         $tecnicos = User::where('idPerfil',$idTecnico->id)->get();
 
         return json_encode($tecnicos);
     }
     
+    /**
+        funcion que imprime el documento en PDF y lo descarga
+     */
+    function imprimirPDF(Request $request)
+    {
+        
+    }
 }
