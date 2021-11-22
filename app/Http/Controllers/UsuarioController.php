@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Perfil;
+use Barryvdh\DomPDF\PDF;
 use DateTime;
+
 
 
 class UsuarioController extends Controller
@@ -316,11 +318,4 @@ class UsuarioController extends Controller
         return json_encode($tecnicos);
     }
     
-    /**
-        funcion que imprime el documento en PDF y lo descarga
-     */
-    function imprimirPDF(Request $request)
-    {
-        
-    }
 }

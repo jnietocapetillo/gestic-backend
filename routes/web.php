@@ -104,3 +104,4 @@ Route::get('/storage/{imagen}', function ($imagen){
     
     return Storage::download($imagen);
 });
+
