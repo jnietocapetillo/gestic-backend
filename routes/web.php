@@ -105,3 +105,5 @@ Route::get('/storage/{imagen}', function ($imagen){
     return Storage::download($imagen);
 });
 
+/** Envio de emails */
+Route::post('/email', 'App\Http\Controllers\envioCorreos@enviarCorreo');
