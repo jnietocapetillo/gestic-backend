@@ -7,8 +7,8 @@ use App\Models\User;
 use App\Models\Perfil;
 use Barryvdh\DomPDF\PDF;
 use DateTime;
-
-
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\usersExport;
 
 class UsuarioController extends Controller
 {
@@ -316,6 +316,13 @@ class UsuarioController extends Controller
         $tecnicos = User::where('idPerfil',$idTecnico->id)->get();
 
         return json_encode($tecnicos);
+    }
+
+    function usuariosExcel()
+    {
+        
+        return Excel::download(new UsersExport, 'usuarios.xlsx');
+      
     }
     
 }

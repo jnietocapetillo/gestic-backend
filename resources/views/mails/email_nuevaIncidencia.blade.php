@@ -4,9 +4,30 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nueva Incidencia</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <title>Document</title>
 </head>
 <body>
-    <h5>Le informamos que se ha creado su nueva incidencia.</h5>
+    <div class="container w-50">
+        <img src="inicio.png" alt="" width="105px" height="100px">
+        <hr>
+        <div class="d-flex flex-row pt-5 pb-5 justify-content-center border border-dark">
+            <div class="p-2">
+                <h4>SE HA CREADO NUEVA INCIDENCIA EN GESTIC</h4>
+                <h5 class="pt-3">DATOS:</h5>
+                <h6 class="text-primary pt-3">Número: {{$datos -> incidencia}}</h6>
+                <h6 class="text-primary pt-3">Usuario: {{$datos -> email}}</h6>
+                <h6 class="text-primary pt-3 pb-5">Técnico: sin técnico asignado. </h6>
+                <span>Recibirá un correo con las modificaciones en la incidencia.</span>
+            </div>
+        </div>
+        <div class="d-flex justify-content-center bg-dark">
+            <div class="p-2 pt-5">
+                <p class="text-light">GESTIC - Control de Incidencias</p>
+                <p class="text-light">mail: info@aplicacionesnet.es</p>
+                <p class="text-light">Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

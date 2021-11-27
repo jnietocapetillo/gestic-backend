@@ -13,10 +13,12 @@
         <hr>
         <div class="d-flex flex-row pt-5 pb-5 justify-content-center border border-dark">
             <div class="p-2">
-                <h4>HA RECIBIDO UN NUEVO MENSAJE</h4>
-                <h5 class="text-primary pt-3 pb-5">mensaje: {{$datos -> mensaje}}</h5>
-                
-                <span>No responsa a este correo. Si necesita contactar, a través de la plataforma.</span>
+                <h4>SE HA ASIGNADO TECNICO A INCIDENCIA EN GESTIC</h4>
+                <h5 class="pt-3">DATOS:</h5>
+                <h6 class="text-primary pt-3">Número incidencia: {{$datos -> incidencia}}</h6>
+                <h6 class="text-primary pt-3 pb-5">Técnico: {{$datos -> tecnico}}</h6>
+
+                <span>Más detalles en Gestic, mis incidencias.</span>
             </div>
         </div>
         <div class="d-flex justify-content-center bg-dark">

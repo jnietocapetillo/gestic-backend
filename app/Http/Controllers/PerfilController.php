@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\perfil;
+use Illuminate\Http\Request;
 
 class PerfilController extends Controller
 {
@@ -60,5 +61,32 @@ class PerfilController extends Controller
 
         return response() ->$ruta;
         //return json_encode('http://gestic/storage/app/images/'.$nombre);
+    }
+
+    function addPerfil(Request $request)
+    {
+        header('Access-Control-Allow-Origin: *'); 
+        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+
+        $json = file_get_contents('php://input');
+        $datos = json_decode($json);
+
+        $esta = Perfil::where('nombre', $datos->nombre)->first();
+
+        if (is_null($esta))
+        {
+            $nuevoDepartamento = Perfil::insert(['nombre'=>$datos->nombre]);
+            if ($nuevoDepartamento)
+            {
+                $respuesta = 200;
+            }
+            else    
+            {
+                $respuesta = 201;
+            }
+        }
+        else $respuesta=202;
+
+        return json_encode($respuesta);
     }
 }

@@ -92,12 +92,14 @@ Route::get('/mensaje/actualizarMensaje/{id}','App\Http\Controllers\MensajeContro
 
 Route::get('/departamentos','App\Http\Controllers\DepartamentoController@listado');
 Route::get('/departamento/{id}','App\Http\Controllers\DepartamentoController@departamentoUsuario');
+Route::post('/departamento/add', 'App\Http\Controllers\DepartamentoController@addDepartamento');
 
 /** rutas para perfiles */
 
 Route::get('/perfiles', 'App\Http\Controllers\PerfilController@perfiles');
 Route::get('/perfil/{id}','App\Http\Controllers\PerfilController@perfilUsuario');
 Route::get('/perfil/nombre/{nombre}','App\Http\Controllers\PerfilController@perfilNombre');
+Route::post('/perfil/add', 'App\Http\Controllers\PerfilController@addPerfil');
 
 /** ruta para solicitar imagen */
 Route::get('/storage/{imagen}', function ($imagen){
@@ -107,3 +109,8 @@ Route::get('/storage/{imagen}', function ($imagen){
 
 /** Envio de emails */
 Route::post('/email', 'App\Http\Controllers\envioCorreos@enviarCorreo');
+
+/** exportar e importar a excel */
+Route::get('/usuarios/excel','App\Http\Controllers\UsuarioController@usuariosExcel');
+Route::get('/incidencias/excel','App\Http\Controllers\IncidenciaController@exportarAexcel');
+Route::get('/logs/excel', 'App\Http\Controllers\LogController@exportarAexcel');

@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
@@ -53,6 +52,16 @@ class Emails extends Mailable
         {
             return $this->subject("Nuevo correo electrónico")
             ->view('mails.email_envio',['datos'=> $this->details]);
+        }
+        else if($this->details->tipo== 6)
+        {
+            return $this->subject("Cambio estado en incidencia")
+            ->view('mails.email_cambioEstado',['datos'=> $this->details]);
+        }
+        else if($this->details->tipo== 7)
+        {
+            return $this->subject("Asignado técnico en incidencia")
+            ->view('mails.email_asignadoTecnico',['datos'=> $this->details]);
         }
     }
 }

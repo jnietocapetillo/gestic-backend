@@ -1,41 +1,32 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nuevo Usuario</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <title>Document</title>
 </head>
 <body>
-<div class="container">
-    <img src="/public/storage/logo.png" alt="" width="205px" height="200px">
-    <hr>
-    <h3>Se ha dado de ALTA en Gestic. Recibirá una notificación cuando sea Activado para poder acceder a la plataforma.</h3>
-    <div class="flex-row">
-        <div class="p-2">
-            <h3>Datos de Usuario: </h3><span>{{$datos['email']}}</span>
+    <div class="container w-50">
+        <img src="inicio.png" alt="" width="105px" height="100px">
+        <hr>
+        <div class="d-flex flex-row pt-5 pb-5 justify-content-center border border-dark">
+            <div class="p-2">
+                <h4>SE HA DADO DE ALTA COMO USUARIO EN GESTIC</h4>
+                <h5 class="pt-3">DATOS DE ACCESO:</h5>
+                <h6 class="text-primary pt-3">Correo: {{$datos -> email}}</h6>
+                <h6 class="text-primary pb-3">Password: {{$datos -> password}}</h6>
+                <span>Recibirá un correo al ser activada su cuenta.</span>
+            </div>
         </div>
-        <div class="p-2">
-            <h3>Acceso: </h3><span>https://aplicacionesnet.es/gestic</span>
-        </div>
-        <div class="p-2">
-            <p>Podrá comprobar sus datos personales accediendo a la aplicación y modificarlos en caso necesario.</p>
-        </div>
-        <div class="p-2">
-            <h4>Gracias por utilizar nuestro servicio. No conrteste a este email, es con fiones informativos.</h4>
+        <div class="d-flex justify-content-center bg-dark">
+            <div class="p-2 pt-5">
+                <p class="text-light">GESTIC - Control de Incidencias</p>
+                <p class="text-light">mail: info@aplicacionesnet.es</p>
+                <p class="text-light">Todos los derechos reservados.</p>
+            </div>
         </div>
     </div>
-</div>
-    
 </body>
-<footer>
-    <div class="flex-row justify-content-center">
-        <div class="p-2">
-            <h4>GESTIC</h4>
-        </div>
-        <div class="p-2">
-            <h3>info@aplicacionesnet.es</h3>
-        </div>
-    </div>
-</footer>
 </html>
