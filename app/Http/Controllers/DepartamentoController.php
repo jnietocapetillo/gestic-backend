@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 use App\Models\departamento;
 use Illuminate\Http\Request;
+use Exception;
+use Illuminate\Support\Facades\DB;
 
 class DepartamentoController extends Controller
 {
@@ -39,7 +41,14 @@ class DepartamentoController extends Controller
 
         if (is_null($esta))
         {        
-            $nuevoDepartamento = departamento::insert(['nombre'=>$datos->nombre]);
+            try{
+                DB::beginTransaction();
+                $nuevoDepartamento = departamento::insert(['nombre'=>$datos->nombre]);
+                DB::commit();
+            }catch(Exception $e){
+                DB::rollBack();
+            }
+            
 
                 if ($nuevoDepartamento)
                 {

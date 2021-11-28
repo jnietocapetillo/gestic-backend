@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\mensaje;
+use Exception;
+use Illuminate\Support\Facades\DB;
 
 class MensajeController extends Controller
 {
@@ -19,8 +21,9 @@ class MensajeController extends Controller
         $datos = json_decode($json);
         
         $fecha = Date("Y-m-d H:i:s");
-
-        $nuevo_mensaje = Mensaje::insert([
+        try{
+            DB::beginTransaction();
+            $nuevo_mensaje = Mensaje::insert([
             'idusuario_receptor'=>$datos->idusuario_receptor,
             'idusuario_origen' =>$datos->idusuario_origen,
             'idincidencia' => $datos-> idincidencia,
@@ -28,17 +31,17 @@ class MensajeController extends Controller
             'descripcion' => $datos -> descripcion,
             'leido' => $datos->leido,
             'imagen' => $datos -> imagen
-        ]);
+            ]);
+            DB::commit();
 
-
-        if ($nuevo_mensaje)
-        {
-            $respuesta = 200;
-            
-        }
-        else
-        {
+            if ($nuevo_mensaje)
+            {
+                $respuesta = 200;
+                
+            }
+        }catch(Exception $e){
             $respuesta = 201;
+            DB::rollBack();
         }
             header('Content-Type: application/json');
             return json_encode($respuesta); 
@@ -66,13 +69,17 @@ class MensajeController extends Controller
 
         //actualizamos el campo imagen en la incidencia
 
-        $mensaje_creado = Mensaje::max('idmensaje');
-        $mensaje = Mensaje::where('idmensaje',$mensaje_creado)->update(['imagen'=>$nombreArchivo]);
-        
-        if ($mensaje)
-            $respuesta = 200;
-        else
-            $respuesta = 201;    
+        try{
+            DB::beginTransaction();
+            $mensaje_creado = Mensaje::max('idmensaje');
+            $mensaje = Mensaje::where('idmensaje',$mensaje_creado)->update(['imagen'=>$nombreArchivo]);
+            DB::commit();
+            if ($mensaje)
+                $respuesta = 200;
+        }catch(Exception $e){
+            $respuesta = 201;  
+            DB::rollBack();
+        }
         
         header('Content-Type: application/json');
         return json_encode($respuesta); 
@@ -171,13 +178,18 @@ class MensajeController extends Controller
         $json = file_get_contents('php://input');
         $datos = json_decode($json);
 
-        $updateMensaje = Mensaje::where('idmensaje',$id)->update(['leido'=>1]);
+        try{
+            DB::beginTransaction();
+            $updateMensaje = Mensaje::where('idmensaje',$id)->update(['leido'=>1]);
 
-        if ($updateMensaje)
-            $resultado = 200;
-        else    
+            if ($updateMensaje)
+                $resultado = 200;
+            DB::commit();
+        
+        }catch(Exception $e){
             $resultado = 201;
-
+            DB::rollBack();
+        }
         return json_encode($resultado);
     }
 
@@ -214,15 +226,18 @@ class MensajeController extends Controller
         header('Access-Control-Allow-Origin: *'); 
         header("Access-Control-Allow-Headers: *");
 
-        $marcarLeido = Mensaje::where('idincidencia',$id)->update(['leido' => 1]);
-
-        if ($marcarLeido)
-        {
-            $respuesta = 200;
-        }
-        else
-        {
+        try{
+            DB::beginTransaction();
+            $marcarLeido = Mensaje::where('idincidencia',$id)->update(['leido' => 1]);
+            
+            if ($marcarLeido)
+            {
+                $respuesta = 200;
+            }
+            DB::commit();
+        }catch (Exception $e){
             $respuesta = 201;
+            DB::rollBack();
         }
 
         return json_encode($respuesta);

@@ -9,6 +9,8 @@ use Barryvdh\DomPDF\PDF;
 use DateTime;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\usersExport;
+use Exception;
+use Illuminate\Support\Facades\DB;
 
 class UsuarioController extends Controller
 {
@@ -92,14 +94,18 @@ class UsuarioController extends Controller
         $json = file_get_contents('php://input');
         $datos = json_decode($json);
 
-        
-        $actualizar_usuario = User::where('idusuario',$id)->update(['nombre'=>$datos->nombre, 'apellidos'=>$datos->apellidos,
-                                                                            'dni'=>$datos->dni, 'departamento'=>$datos->departamento,
-                                                                            'movil'=>$datos->movil,'domicilio'=>$datos->domicilio,
-                                                                             'localidad'=>$datos->localidad, 'municipio'=>$datos->municipio,
-                                                                            'codigo_postal'=>$datos->codigo_postal]);
-        $usuarioActualizado = User::where('idusuario',$id)->first();
-
+        try{
+            DB::beginTransaction();
+            $actualizar_usuario = User::where('idusuario',$id)->update(['nombre'=>$datos->nombre, 'apellidos'=>$datos->apellidos,
+                                                                                'dni'=>$datos->dni, 'departamento'=>$datos->departamento,
+                                                                                'movil'=>$datos->movil,'domicilio'=>$datos->domicilio,
+                                                                                'localidad'=>$datos->localidad, 'municipio'=>$datos->municipio,
+                                                                                'codigo_postal'=>$datos->codigo_postal]);
+            $usuarioActualizado = User::where('idusuario',$id)->first();
+            DB::commit();
+        }catch(Exception $e){
+            DB::rollBack();
+        }
         if ($actualizar_usuario){
             $estado = 200;
             $usuario = $usuarioActualizado;
@@ -205,7 +211,11 @@ class UsuarioController extends Controller
             $fecha = new DateTime();
             $estado = 200;
             //insertamos usuario
-            $addUser = User::insert([
+            try 
+            {
+                DB::beginTransaction();
+
+                $addUser = User::insert([
                 'nombre' => $datos->nombre,
                 'apellidos' => $datos ->apellidos,
                 'dni' => $datos -> dni,
@@ -220,7 +230,12 @@ class UsuarioController extends Controller
                 'municipio' => $datos->provincia,
                 'codigo_postal' =>$datos -> codigo_postal,
                 'avatar' =>$datos ->imagen
-            ]);
+                ]);
+                DB::commit();
+            }catch(Exception $e){
+                DB::rollBack();
+            }
+            
             
         }
         else    
@@ -267,9 +282,15 @@ class UsuarioController extends Controller
         file_put_contents($ruta,$archivo);
 
         //actualizamos el campo imagen en la incidencia
-
-        $usuario_creado = User::max('idincidencia');
-        $usuario = User::where('idincidencia',$usuario_creado)->update(['avatar'=>$nombreArchivo]);
+        try {
+            DB::beginTransaction();
+            $usuario_creado = User::max('idincidencia');
+            $usuario = User::where('idincidencia',$usuario_creado)->update(['avatar'=>$nombreArchivo]);
+            DB::commit();
+        }catch(Exception $e){
+            DB::rollBack();
+        }
+        
         
         if ($usuario)
             $respuesta = 200;
@@ -289,7 +310,14 @@ class UsuarioController extends Controller
         header('Access-Control-Allow-Origin: *'); 
         header("Access-Control-Allow-Headers: *");
 
-        $usuarioActivo = User::where('idusuario',$id)->update(['activo'=>1]);
+        try{
+            DB::beginTransaction();
+            $usuarioActivo = User::where('idusuario',$id)->update(['activo'=>1]);
+            DB::commit();
+        }catch(Exception $e){
+            DB::rollBack();
+        }
+        
 
         if ($usuarioActivo)
         {

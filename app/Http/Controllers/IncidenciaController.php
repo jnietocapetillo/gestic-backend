@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\incidencia;
-
+use Exception;
+use Illuminate\Support\Facades\DB;
 
 class IncidenciaController extends Controller
 {
@@ -65,8 +66,9 @@ class IncidenciaController extends Controller
         $json = file_get_contents('php://input');
         $datos = json_decode($json);
 
-
-        $nueva_incidencia = Incidencia::insert([
+        try{
+            DB::beginTransaction();
+            $nueva_incidencia = Incidencia::insert([
             'idusuario' => $datos->idusuario,
             'tecnico_asignado' => $datos ->tecnico_asignado,
             'fecha' => $datos->fecha,
@@ -76,18 +78,20 @@ class IncidenciaController extends Controller
             'ubicacion' =>$datos ->departamento,
             'descripcion' => $datos -> descripcion,
             'imagen' => $datos -> imagen
-        ]);
-        
-        if ($nueva_incidencia)
-        {
-            $incidencia_creada = Incidencia::max('idincidencia');
-            $incidencia = Incidencia::where('idincidencia',$incidencia_creada)->first();
-            $respuesta = [ 'estado' =>200, 'incidencia' => $incidencia];
-        }
-        else
-        {
+            ]);
+            DB::commit();
+            if ($nueva_incidencia)
+            {
+                $incidencia_creada = Incidencia::max('idincidencia');
+                $incidencia = Incidencia::where('idincidencia',$incidencia_creada)->first();
+                $respuesta = [ 'estado' =>200, 'incidencia' => $incidencia];
+            }
+        }catch(Exception $e){
+            DB::rollBack();
             $respuesta = [ 'estado' =>201, 'incidencia' => null];
+
         }
+        
             header('Content-Type: application/json');
             return json_encode($respuesta); 
     }
@@ -113,14 +117,17 @@ class IncidenciaController extends Controller
         file_put_contents($ruta,$archivo);
 
         //actualizamos el campo imagen en la incidencia
-
-        $incidencia_creada = Incidencia::max('idincidencia');
-        $incidencia = Incidencia::where('idincidencia',$incidencia_creada)->update(['imagen'=>$ruta]);
-        
-        if ($incidencia)
-            $respuesta = 200;
-        else
-            $respuesta = 201;    
+        try{
+            DB::beginTransaction();
+            $incidencia_creada = Incidencia::max('idincidencia');
+            $incidencia = Incidencia::where('idincidencia',$incidencia_creada)->update(['imagen'=>$ruta]);
+            DB::commit();
+            if ($incidencia)
+                $respuesta = 200;
+        }catch(Exception $e){
+            $respuesta = 201;  
+            DB::rollBack();
+        }     
         
         header('Content-Type: application/json');
         return json_encode($respuesta); 
@@ -188,18 +195,19 @@ class IncidenciaController extends Controller
 
         $json = file_get_contents('php://input'); //recibimos el json de angular
         $parametros = json_decode($json);// decodifica el json y lo guarda en paramentros
-
-        $actualizar = Incidencia::where('idincidencia', $parametros->id)->update(['prioridad'=>$parametros->prioridad, 'tecnico_asignado'=>$parametros->tecnico]);
-
-        if ($actualizar)
-        {
-            $respuesta = 200;
-        }
-        else
-        {
+        try{
+            DB::beginTransaction();
+            $actualizar = Incidencia::where('idincidencia', $parametros->id)->update(['prioridad'=>$parametros->prioridad, 'tecnico_asignado'=>$parametros->tecnico]);
+            DB::commit();
+            if ($actualizar)
+            {
+                $respuesta = 200;
+            }
+        }catch(Exception $e){
             $respuesta = 201;
+            DB::rollBack();
         }
-
+        
         return json_encode($respuesta);
 
     }

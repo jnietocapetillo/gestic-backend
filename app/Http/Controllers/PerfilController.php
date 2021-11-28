@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 use App\Models\perfil;
 use Illuminate\Http\Request;
+use Exception;
+use Illuminate\Support\Facades\DB;
 
 class PerfilController extends Controller
 {
@@ -75,7 +77,14 @@ class PerfilController extends Controller
 
         if (is_null($esta))
         {
-            $nuevoDepartamento = Perfil::insert(['nombre'=>$datos->nombre]);
+            try{
+                DB::beginTransaction();
+                $nuevoDepartamento = Perfil::insert(['nombre'=>$datos->nombre]);
+                DB::commit();
+            }catch(Exception $e){
+                DB::rollBack();
+            }
+            
             if ($nuevoDepartamento)
             {
                 $respuesta = 200;
