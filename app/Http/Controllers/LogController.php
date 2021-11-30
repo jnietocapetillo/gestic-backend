@@ -10,8 +10,15 @@ class LogController extends Controller
         listado de todos los log
      */
     function listado(){
+
         $listado = log::all();
-        $json = json_decode($listado);
-        var_dump($listado);
+
+        $respuesta = [
+            'resultado' => 200,
+            'datos' => $listado
+        ];
+        
+        return json_encode($respuesta);
+        
     }
 }

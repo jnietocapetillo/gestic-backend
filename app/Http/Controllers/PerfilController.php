@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 use App\Models\perfil;
+use App\Models\log;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use DateTime;
 
 class PerfilController extends Controller
 {
@@ -80,6 +83,15 @@ class PerfilController extends Controller
             try{
                 DB::beginTransaction();
                 $nuevoDepartamento = Perfil::insert(['nombre'=>$datos->nombre]);
+
+                //log del sistema
+                $fecha = new DateTime();
+                $user = User::where('idPerfil',1)->first();
+                log::insert([
+                    'tipo_acceso' => 'marcado leido mensaje',
+                    'idusuario' => $user->nombre.' '.$user->apellidos,
+                    'fecha' => $fecha
+                ]);
                 DB::commit();
             }catch(Exception $e){
                 DB::rollBack();

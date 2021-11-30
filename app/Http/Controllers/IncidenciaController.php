@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\incidencia;
+use App\Models\log;
+use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use DateTime;
 
 class IncidenciaController extends Controller
 {
@@ -25,6 +28,9 @@ class IncidenciaController extends Controller
 
     function detalle($id)
     {
+        header('Access-Control-Allow-Origin: *'); 
+        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+
         $incidencia = Incidencia::find($id);
 
         if ($incidencia == null)
@@ -68,6 +74,7 @@ class IncidenciaController extends Controller
 
         try{
             DB::beginTransaction();
+
             $nueva_incidencia = Incidencia::insert([
             'idusuario' => $datos->idusuario,
             'tecnico_asignado' => $datos ->tecnico_asignado,
@@ -79,6 +86,16 @@ class IncidenciaController extends Controller
             'descripcion' => $datos -> descripcion,
             'imagen' => $datos -> imagen
             ]);
+
+            //log del sistema
+            $fecha = new DateTime();
+            $usuario = User::where('idusuario',$nueva_incidencia->idusuario)->first();
+            log::insert([
+                'tipo_acceso' => 'add incidencia',
+                'idusuario' => $usuario->nombre.' '.$usuario->apellidos,
+                'fecha' => $fecha
+            ]);
+
             DB::commit();
             if ($nueva_incidencia)
             {
@@ -120,7 +137,17 @@ class IncidenciaController extends Controller
         try{
             DB::beginTransaction();
             $incidencia_creada = Incidencia::max('idincidencia');
+
             $incidencia = Incidencia::where('idincidencia',$incidencia_creada)->update(['imagen'=>$ruta]);
+
+            //log del sistema
+            $fecha = new DateTime();
+            $usuario = User::where('idusuario',$incidencia->idusuario)->first();
+            log::insert([
+                'tipo_acceso' => 'update incidencia',
+                'idusuario' => $usuario->nombre.' '.$usuario->apellidos,
+                'fecha' => $fecha
+            ]);
             DB::commit();
             if ($incidencia)
                 $respuesta = 200;
@@ -139,6 +166,9 @@ class IncidenciaController extends Controller
      */
     function tecnicoIncidencia($id)
     {
+        header('Access-Control-Allow-Origin: *'); 
+        header("Access-Control-Allow-Headers: *");
+
         $idTecnico = Incidencia::find($id);
 
         if ($idTecnico != null)
@@ -164,6 +194,9 @@ class IncidenciaController extends Controller
      */
     function idUsuarioIncidencia($id)
     {
+        header('Access-Control-Allow-Origin: *'); 
+        header("Access-Control-Allow-Headers: *");
+
         $IDusuario = Incidencia::find($id);
 
         if ($IDusuario == null)
@@ -198,6 +231,15 @@ class IncidenciaController extends Controller
         try{
             DB::beginTransaction();
             $actualizar = Incidencia::where('idincidencia', $parametros->id)->update(['prioridad'=>$parametros->prioridad, 'tecnico_asignado'=>$parametros->tecnico]);
+
+            //log del sistema
+            $fecha = new DateTime();
+            $usuario = User::where('idusuario',1)->first();
+            log::insert([
+                'tipo_acceso' => 'asignar tecnico/prioridad',
+                'idusuario' => $usuario->nombre.' '.$usuario->apellidos,
+                'fecha' => $fecha
+            ]);
             DB::commit();
             if ($actualizar)
             {
@@ -215,8 +257,27 @@ class IncidenciaController extends Controller
     /**
         funcion que actualiza una incidencia pasada por metodo PUT
      */
-    function actualiza($incidencia){
+    function updateIncidencia(Request $request){
 
+        header('Access-Control-Allow-Origin: *'); 
+        header("Access-Control-Allow-Headers: *");
+
+        $json = file_get_contents('php://input'); //recibimos el json de angular
+        $parametros = json_decode($json);// decodifica el json y lo guarda en paramentros
+
+        $incidencia = Incidencia::where('idincidencia',$parametros->idincidencia)->update([
+            'prioridad' => $parametros->prioridad,
+            'estado' => $parametros->estado,
+            'descripcion' => $parametros->descripcion
+        ]);
+
+        if ($incidencia)
+        {
+            $respuesta = 200;
+        }
+        else $respuesta = 201;
+
+        return json_encode($respuesta);
     }
 
     /**
@@ -226,18 +287,32 @@ class IncidenciaController extends Controller
 
     }
 
-    function solicitud()
+    function incidenciasTecnico(Request $request)
     {
-        return view('solicitudDirector');
-    }
+        header('Access-Control-Allow-Origin: *'); 
+        header("Access-Control-Allow-Headers: *");
 
-    function datos( Request $request)
-    {
-        
-    }
+        $json = file_get_contents('php://input'); //recibimos el json de angular
+        $parametros = json_decode($json);// decodifica el json y lo guarda en paramentros
 
-    function prueba()
-    {
-        
+        $incidencias_tecnicos = Incidencia::where('tecnico_asignado',$parametros)->get();
+
+        if ($incidencias_tecnicos == null)
+        {
+            $estado = 201;
+            $datos = null;
+        }
+        else
+        {
+            $estado = 200;
+            $datos = $incidencias_tecnicos;
+        }
+
+        $respuesta = [
+            'estado' => $estado,
+            'datos' => $datos
+        ];
+
+        return json_encode($respuesta);
     }
 }

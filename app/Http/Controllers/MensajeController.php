@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\mensaje;
+use App\Models\log;
+use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use DateTime;
 
 class MensajeController extends Controller
 {
@@ -31,6 +34,15 @@ class MensajeController extends Controller
             'descripcion' => $datos -> descripcion,
             'leido' => $datos->leido,
             'imagen' => $datos -> imagen
+            ]);
+
+            //log del sistema
+            $fecha = new DateTime();
+            $usuario = User::where('idusuario',$nuevo_mensaje->idusuario_origen)->first();
+            log::insert([
+                    'tipo_acceso' => 'add mensaje',
+                    'idusuario' => $usuario->nombre.' '.$usuario->apellidos,
+                    'fecha' => $fecha
             ]);
             DB::commit();
 
@@ -73,6 +85,15 @@ class MensajeController extends Controller
             DB::beginTransaction();
             $mensaje_creado = Mensaje::max('idmensaje');
             $mensaje = Mensaje::where('idmensaje',$mensaje_creado)->update(['imagen'=>$nombreArchivo]);
+
+            //log del sistema
+            $fecha = new DateTime();
+            $usuario = User::where('idusuario',$mensaje->idusuario_origen)->first();
+            log::insert([
+                    'tipo_acceso' => 'update mensaje',
+                    'idusuario' => $usuario->nombre.' '.$usuario->apellidos,
+                    'fecha' => $fecha
+            ]);
             DB::commit();
             if ($mensaje)
                 $respuesta = 200;
@@ -182,6 +203,14 @@ class MensajeController extends Controller
             DB::beginTransaction();
             $updateMensaje = Mensaje::where('idmensaje',$id)->update(['leido'=>1]);
 
+            //log del sistema
+            $fecha = new DateTime();
+            $usuario = User::where('idusuario',$updateMensaje->idusuario_origen)->first();
+            log::insert([
+                'tipo_acceso' => 'marcado leido mensaje',
+                'idusuario' => $usuario->nombre.' '.$usuario->apellidos,
+                'fecha' => $fecha
+            ]);
             if ($updateMensaje)
                 $resultado = 200;
             DB::commit();
@@ -230,6 +259,14 @@ class MensajeController extends Controller
             DB::beginTransaction();
             $marcarLeido = Mensaje::where('idincidencia',$id)->update(['leido' => 1]);
             
+            //log del sistema
+            $fecha = new DateTime();
+            $usuario = User::where('idusuario',$marcarLeido->idusuario_origen)->first();
+            log::insert([
+                'tipo_acceso' => 'marcado leido mensaje',
+                'idusuario' => $usuario->nombre.' '.$usuario->apellidos,
+                'fecha' => $fecha
+            ]);
             if ($marcarLeido)
             {
                 $respuesta = 200;

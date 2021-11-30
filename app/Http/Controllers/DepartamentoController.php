@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 use App\Models\departamento;
+use App\Models\log;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use DateTime;
 
 class DepartamentoController extends Controller
 {
@@ -43,7 +46,17 @@ class DepartamentoController extends Controller
         {        
             try{
                 DB::beginTransaction();
+                
                 $nuevoDepartamento = departamento::insert(['nombre'=>$datos->nombre]);
+                //log del sistema
+                $fecha = new DateTime();
+                $usuAdmin = User::where('idPerfil',1)->first();
+
+                log::insert([
+                    'tipo_acceso' => 'add departamento',
+                    'idusuario' => $usuAdmin->nombre.' '.$usuAdmin->apellidos,
+                    'fecha' => $fecha
+                ]);
                 DB::commit();
             }catch(Exception $e){
                 DB::rollBack();

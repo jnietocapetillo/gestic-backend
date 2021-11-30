@@ -67,6 +67,10 @@ Route::get('incidencia/idincidencia/{id}', 'App\Http\Controllers\IncidenciaContr
 
 Route::post('incidencia/asignar', 'App\Http\Controllers\IncidenciaController@asignarTecnicoPrioridad');
 
+Route::post('/incidencias/tecnico', 'App\Http\Controllers\IncidenciaController@incidenciasTecnico');
+
+Route::put('/incidencia/update', 'App\Http\Controllers\IncidenciaController@updateIncidencia');
+
 /* rutas para logs */
 
 Route::get('/logs','App\Http\Controllers\LogController@listado');

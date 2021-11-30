@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Perfil;
+use App\Models\log;
 use Barryvdh\DomPDF\PDF;
 use DateTime;
 use Maatwebsite\Excel\Facades\Excel;
@@ -42,6 +43,15 @@ class UsuarioController extends Controller
                 $resultado = 200;
                 //una vez que vemos que existe el usuario debemos saber si esta activo o no
                 $mensaje = $usuario;
+
+                //insertamos los log del sistema
+                $fecha = new DateTime();
+                log::insert([
+                    'tipo_acceso' => 'login user',
+                    'idusuario' => $usuario->nombre.' '.$usuario->apellidos,
+                    'fecha' => $fecha
+                ]);
+
             }
             else 
             {
@@ -102,6 +112,14 @@ class UsuarioController extends Controller
                                                                                 'localidad'=>$datos->localidad, 'municipio'=>$datos->municipio,
                                                                                 'codigo_postal'=>$datos->codigo_postal]);
             $usuarioActualizado = User::where('idusuario',$id)->first();
+
+            //insertamos en logs del sistema
+            $fecha = new DateTime();
+            log::insert([
+                    'tipo_acceso' => 'update user',
+                    'idusuario' => $usuarioActualizado->nombre.' '.$usuarioActualizado->apellidos,
+                    'fecha' => $fecha
+            ]);
             DB::commit();
         }catch(Exception $e){
             DB::rollBack();
@@ -231,6 +249,14 @@ class UsuarioController extends Controller
                 'codigo_postal' =>$datos -> codigo_postal,
                 'avatar' =>$datos ->imagen
                 ]);
+
+                //log del sistema
+                $fecha = new DateTime();
+                log::insert([
+                    'tipo_acceso' => 'add user',
+                    'idusuario' => $addUser->nombre.' '.$addUser->apellidos,
+                    'fecha' => $fecha
+                ]);
                 DB::commit();
             }catch(Exception $e){
                 DB::rollBack();
@@ -286,6 +312,14 @@ class UsuarioController extends Controller
             DB::beginTransaction();
             $usuario_creado = User::max('idincidencia');
             $usuario = User::where('idincidencia',$usuario_creado)->update(['avatar'=>$nombreArchivo]);
+
+            //log del sistema
+            $fecha = new DateTime();
+            log::insert([
+                    'tipo_acceso' => 'update user image',
+                    'idusuario' => $usuario->nombre.' '.$usuario->apellidos,
+                    'fecha' => $fecha
+            ]);
             DB::commit();
         }catch(Exception $e){
             DB::rollBack();
@@ -313,6 +347,15 @@ class UsuarioController extends Controller
         try{
             DB::beginTransaction();
             $usuarioActivo = User::where('idusuario',$id)->update(['activo'=>1]);
+
+            //logs del sistema
+            $fecha = new DateTime();
+            $usuarioAdmin = User::where('idPerfil',1)->first();
+            log::insert([
+                    'tipo_acceso' => 'Activated user',
+                    'idusuario' => $usuarioAdmin->nombre.' '.$usuarioAdmin->apellidos,
+                    'fecha' =>$fecha
+            ]);
             DB::commit();
         }catch(Exception $e){
             DB::rollBack();
