@@ -27,6 +27,8 @@ Route::post('/usuarios/reset', 'App\Http\Controllers\UsuarioController@resetPass
 
 Route::get('/usuarios', 'App\Http\Controllers\UsuarioController@listado');
 
+Route::get('/usuario/detalle/{id}', 'App\Http\Controllers\UsuarioController@detalleUsuario');
+
 Route::post('/usuarios', 'App\Http\Controllers\UsuarioController@addUsuario');
 
 Route::post('/usuarios/idEmail', 'App\Http\Controllers\UsuarioController@idUsuarioEmail');
@@ -35,7 +37,7 @@ Route::get('/usuario/idPerfil/{id}','App\Http\Controllers\UsuarioController@idUs
 
 Route::post('/usuarios/add','App\Http\Controllers\UsuarioController@addUsuario');
 
-Route::get('/usuarios/{id}','App\Http\Controllers\UsuarioController@detalle');
+Route::get('/usuario/desactivar/{id}','App\Http\Controllers\UsuarioController@desactivarUsuario' );
 
 Route::put('/usuarios/{id}','App\Http\Controllers\UsuarioController@actualizarUsuario');
 
@@ -56,6 +58,8 @@ Route::get('/incidencias','App\Http\Controllers\IncidenciaController@listado');
 Route::post('/incidencia/add', 'App\Http\Controllers\IncidenciaController@addIncidencia');
 
 Route::get('/incidencia/{id}','App\Http\Controllers\IncidenciaController@detalle');
+
+Route::delete('/incidencias/{id}', 'App\Http\Controllers\IncidenciaController@deleteIncidencia');
 
 Route::get('/incidencia/usuario/{id}','App\Http\Controllers\IncidenciaController@incidenciasUsuario' );
 

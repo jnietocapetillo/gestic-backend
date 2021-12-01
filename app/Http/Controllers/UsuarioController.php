@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Perfil;
 use App\Models\log;
+use App\Models\incidencia;
+use App\Models\Mensaje;
 use Barryvdh\DomPDF\PDF;
 use DateTime;
 use Maatwebsite\Excel\Facades\Excel;
@@ -16,7 +18,7 @@ use Illuminate\Support\Facades\DB;
 class UsuarioController extends Controller
 {
     /**
-        Comprobamos si el correo y la contraseña corresponden a un usuario
+     *   Comprobamos si el correo y la contraseña corresponden a un usuario
      */
 
     function login(Request $request)
@@ -69,9 +71,38 @@ class UsuarioController extends Controller
         return json_encode($response);
     }
 
+    /**
+     *   funcion que devuelve un usuario especificado por el id
+     */
+
+    function detalleUsuario($id)
+    {
+        header('Access-Control-Allow-Origin: *'); 
+        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+
+        $usuario = User::find($id);
+
+        if (is_null($usuario))
+        {
+            $estado = 201;
+            $datos = null;
+        }
+        else
+        {
+            $estado = 200;
+            $datos = $usuario;
+        }
+
+        $respuesta = [
+            'estado' => $estado,
+            'datos' => $datos
+        ];
+
+        return json_encode($respuesta);
+    }
     
     /**
-        funcion que nos da todas los usuario de la base de datos
+     *   funcion que nos da todas los usuario de la base de datos
      */
     function listado(){
 
@@ -84,17 +115,7 @@ class UsuarioController extends Controller
     }
 
     /**
-        funcion que devuelve un usuario especificado por el id
-     */
-
-    function detalle($id){
-        $detalle = User::find($id);
-        $json = json_decode($detalle);
-        return($json);
-    }
-
-    /**
-        funcion que actualiza los datos enviados por PUT de un usuario
+     *   funcion que actualiza los datos enviados por PUT de un usuario
      */
     function actualizarUsuario(Request $request,$id){
 
@@ -140,14 +161,40 @@ class UsuarioController extends Controller
     }
 
     /**
-        funcion que elimina un usuario indicado por idusuario
+     *    funcion que elimina un usuario indicado por idusuario
      */
     function deleteUsuario($id){
 
+        header('Access-Control-Allow-Origin: *'); 
+        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+
+        //debemos borrar las incidencias y mensajes asociados a este usuario
+
+        $incidencias_usuario = Incidencia::where('idusuario',$id)->get();
+
+        foreach($incidencias_usuario as $incidencias)
+        {
+            $mensajes = Mensaje::where('idincidencia',$incidencias->idincidencia)->get();
+            $mensajes->delete();
+        }
+        //borramos las incidencias
+        $incidencias_usuario->delete();
+
+        //borramos el usuario
+        $usuario = User::where('idusuario',$id)->first();
+
+        $usuario ->delete();
+
+        if ($usuario)
+            $respuesta = 200;
+        else    
+            $respuesta = 201;
+
+        return json_encode($respuesta);
     }
 
     /**
-    Funcion que devuelve el id de un usuario a través de su correo
+     * Funcion que devuelve el id de un usuario a través de su correo
      */
     function idUsuarioEmail(Request $request)
     {
@@ -169,7 +216,7 @@ class UsuarioController extends Controller
     }
 
     /**
-    Funcion que devuelve el id de un usuario a través de su perfil
+     * Funcion que devuelve el id de un usuario a través de su perfil
      */
     function idUsuarioPerfil($id)
     {
@@ -187,7 +234,7 @@ class UsuarioController extends Controller
     }
 
     /**
-            funcion que resetea la password de un usuario pasado por id
+     *       funcion que resetea la password de un usuario pasado por id
      */
     function resetPassword(Request $request)
     {
@@ -211,7 +258,7 @@ class UsuarioController extends Controller
     }
 
     /**
-        funcion que inserta un nuevo usuario pasado por post
+     *   funcion que inserta un nuevo usuario pasado por post
      */
     function addUsuario(Request $request)
     {
@@ -274,7 +321,7 @@ class UsuarioController extends Controller
     }
 
     /**
-        funcion que envia el nombre y apellidos del usuario pasado por id 
+     *   funcion que envia el nombre y apellidos del usuario pasado por id 
      */
     function nombreUsuario($id)
     {
@@ -287,7 +334,7 @@ class UsuarioController extends Controller
     }
 
     /**
-        funcion que agrega una imagen al perfil de usuario
+     *   funcion que agrega una imagen al perfil de usuario
      */
 
     function addImagenUsuario(Request $request)
@@ -337,7 +384,7 @@ class UsuarioController extends Controller
     }
 
     /**
-        funcion que activa un usuario pasado por id
+      *  funcion que activa un usuario pasado por id
      */
     function activarUsuario($id)
     {
@@ -375,7 +422,7 @@ class UsuarioController extends Controller
     }
 
     /**
-        funcion que devuelve los usuarios que son técnicos
+     *   funcion que devuelve los usuarios que son técnicos
      */
     function tecnicosUsuarios()
     {
@@ -389,11 +436,28 @@ class UsuarioController extends Controller
         return json_encode($tecnicos);
     }
 
+    /**
+    * funcion que exporta a excel la lista de usuarios
+     */
     function usuariosExcel()
     {
         
         return Excel::download(new UsersExport, 'usuarios.xlsx');
       
+    }
+
+    function desactivarUsuario($id)
+    {
+        header('Access-Control-Allow-Origin: *'); 
+        header("Access-Control-Allow-Headers: *");
+
+        $usuario = User::where('idusuario',$id)->update(['activo' => 0]);
+
+        if($usuario) $resultado = 200;
+        else $resultado = 201;
+
+        return json_encode($resultado);
+
     }
     
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\incidencia;
+use App\Models\Mensaje;
 use App\Models\log;
 use App\Models\User;
 use Exception;
@@ -283,8 +284,27 @@ class IncidenciaController extends Controller
     /**
         funcion que elimina la incidencia por el metodo DELETE
      */
-    function eliminar($incidencia){
+    function deleteIncidencia($id){
 
+        header('Access-Control-Allow-Origin: *'); 
+        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+
+        //debemos borrar las incidencias y mensajes asociados a este usuario
+
+        $mensajes = Mensaje::where('idincidencia',$id)->get();
+
+        $mensajes->delete();
+
+        $incidencia = Incidencia::where('idincidencia',$id)->first();
+
+        $incidencia->delete();
+
+        if($incidencia)
+            $respuesta = 200;
+        else
+            $respuesta = 201;
+
+        return json_encode($respuesta);
     }
 
     function incidenciasTecnico(Request $request)
