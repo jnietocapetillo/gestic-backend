@@ -34,4 +34,13 @@ class envioCorreos extends Controller
 
         return json_encode($respuesta);
     }
+
+    function prueba()
+    {
+        $datos = [
+            'usuario' => 'yo mismo',
+            'mensaje' => 'holaaaaaaa'
+        ];
+        return view('mails.email_envio', ['datos' => $datos]);
+    }
 }

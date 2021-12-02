@@ -122,3 +122,5 @@ Route::post('/email', 'App\Http\Controllers\envioCorreos@enviarCorreo');
 Route::get('/usuarios/excel','App\Http\Controllers\UsuarioController@usuariosExcel');
 Route::get('/incidencias/excel','App\Http\Controllers\IncidenciaController@exportarAexcel');
 Route::get('/logs/excel', 'App\Http\Controllers\LogController@exportarAexcel');
+
+Route::get('/prueba','App\Http\Controllers\envioCorreos@prueba');

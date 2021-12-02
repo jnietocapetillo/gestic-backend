@@ -179,7 +179,9 @@ return [
         Barryvdh\DomPDF\ServiceProvider::class,
 
         //importar exportar excel
-        Maatwebsite\Excel\ExcelServiceProvider::class
+        Maatwebsite\Excel\ExcelServiceProvider::class,
+        Fedeisas\LaravelMailCssInliner\LaravelMailCssInlinerServiceProvider::class,
+            
 
     ],
 

@@ -9,11 +9,12 @@
 </head>
 <body>
     <div class="container w-50">
-        <img src="inicio.png" alt="" width="105px" height="100px">
+        <img src="{{ asset('storage/logo.png') }}" alt="" width="105px" height="100px">
         <hr>
         <div class="d-flex flex-row pt-5 pb-5 justify-content-center border border-dark">
             <div class="p-2">
                 <h4>HA RECIBIDO UN NUEVO MENSAJE</h4>
+                <h5 class="text-primary pt-3 pb-5">De: {{$datos -> usuario}}</h5>
                 <h5 class="text-primary pt-3 pb-5">mensaje: {{$datos -> mensaje}}</h5>
                 
                 <span>No responsa a este correo. Si necesita contactar, a través de la plataforma.</span>
