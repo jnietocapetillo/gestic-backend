@@ -10,6 +10,8 @@ use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use DateTime;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\incidenciasExport;
 
 class IncidenciaController extends Controller
 {
@@ -334,5 +336,15 @@ class IncidenciaController extends Controller
         ];
 
         return json_encode($respuesta);
+    }
+
+    /**
+    * funcion que exporta a excel la lista de incidencias
+     */
+    function incidenciasExcel()
+    {
+        
+        return Excel::download(new IncidenciasExport, 'incidencias.xlsx');
+      
     }
 }

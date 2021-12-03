@@ -4,9 +4,22 @@ namespace App\Exports;
 
 use App\Models\log;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class logsExport implements FromCollection
+class LogExport implements FromCollection,WithHeadings
 {
+    public function headings(): array
+    {
+        return [
+            'ID',
+            'Tipo Acceso',
+            'Usuairo',
+            'Fecha',
+            'Creado',
+            'Actualizado',
+
+        ];
+    }
     /**
     * @return \Illuminate\Support\Collection
     */

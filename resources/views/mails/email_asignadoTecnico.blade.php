@@ -7,26 +7,71 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <title>Document</title>
 </head>
+<style type="text/css">
+    .contenedor{
+        width: 600px;
+        height: 720px;
+        border: 1px solid rgb(16, 56, 58);
+        margin: 0 auto;
+    }
+
+    .contenido{
+        padding-top: 50px;
+        width: 500px;
+        height: 400px;
+        margin: 0 auto;
+    }
+    h4{
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        color: rgb(8, 86, 90);
+    }
+
+    h5{
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        color: rgb(37, 48, 148);
+        padding-top: 10px;
+    }
+    .mensaje{
+        height: 250px;
+    }
+    span{
+        color:gray;
+    }
+    .pie{
+        background-color: rgb(27, 29, 29);
+        color: floralwhite;
+        text-align: center;
+        height: 125px;
+    }
+    img{
+        padding-top: 10px;
+    }
+    p{
+        padding-top: 10px;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+    }
+
+</style>
 <body>
-    <div class="container w-50">
-        <img src="inicio.png" alt="" width="105px" height="100px">
+    <div class="contenedor">
+        <img src="http://gestic/storage/logo.png" alt="" width="105px" height="100px">
         <hr>
-        <div class="d-flex flex-row pt-5 pb-5 justify-content-center border border-dark">
-            <div class="p-2">
+        <div class="contenido">
+            
                 <h4>SE HA ASIGNADO TECNICO A INCIDENCIA EN GESTIC</h4>
-                <h5 class="pt-3">DATOS:</h5>
-                <h6 class="text-primary pt-3">Número incidencia: {{$datos -> incidencia}}</h6>
-                <h6 class="text-primary pt-3 pb-5">Técnico: {{$datos -> tecnico}}</h6>
+                <h5>DATOS:</h5>
+                <h5>Número incidencia: {{$datos -> incidencia}}</h5>
+                <h5>Técnico: {{$datos -> tecnico}}</h5>
 
                 <span>Más detalles en Gestic, mis incidencias.</span>
-            </div>
+           
         </div>
-        <div class="d-flex justify-content-center bg-dark">
-            <div class="p-2 pt-5">
-                <p class="text-light">GESTIC - Control de Incidencias</p>
-                <p class="text-light">mail: info@aplicacionesnet.es</p>
-                <p class="text-light">Todos los derechos reservados.</p>
-            </div>
+        <div class="pie">
+            
+                <p>GESTIC - Control de Incidencias</p>
+                <p>mail: info@aplicacionesnet.es</p>
+                <p>Todos los derechos reservados.</p>
+            
         </div>
     </div>
 </body>

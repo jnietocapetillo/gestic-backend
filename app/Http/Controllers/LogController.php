@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 use App\Models\log;
 use Illuminate\Http\Request;
+use App\Exports\logExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class LogController extends Controller
 {
@@ -20,5 +22,15 @@ class LogController extends Controller
         
         return json_encode($respuesta);
         
+    }
+
+    /**
+    * funcion que exporta a excel la lista de logs
+     */
+    function logsExcel()
+    {
+        
+        return Excel::download(new LogExport, 'logs.xlsx');
+      
     }
 }

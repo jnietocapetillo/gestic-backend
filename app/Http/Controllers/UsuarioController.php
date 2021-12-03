@@ -8,7 +8,6 @@ use App\Models\Perfil;
 use App\Models\log;
 use App\Models\incidencia;
 use App\Models\Mensaje;
-use Barryvdh\DomPDF\PDF;
 use DateTime;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\usersExport;
