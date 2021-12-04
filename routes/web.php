@@ -23,6 +23,8 @@ Route::get('/', function () {
 
 Route::post('/login','App\Http\Controllers\UsuarioController@login');
 
+Route::post('/login/google','App\Http\Controllers\UsuarioController@loginGoogle');
+
 Route::post('/usuarios/reset', 'App\Http\Controllers\UsuarioController@resetPassword');
 
 Route::get('/usuarios', 'App\Http\Controllers\UsuarioController@listado');
@@ -33,11 +35,11 @@ Route::post('/usuarios', 'App\Http\Controllers\UsuarioController@addUsuario');
 
 Route::post('/usuarios/idEmail', 'App\Http\Controllers\UsuarioController@idUsuarioEmail');
 
-Route::get('/usuario/idPerfil/{id}','App\Http\Controllers\UsuarioController@idUsuarioPerfil' );
+Route::get('/usuario/idPerfil/{id}','App\Http\Controllers\UsuarioController@idUsuarioPerfil');
 
 Route::post('/usuarios/add','App\Http\Controllers\UsuarioController@addUsuario');
 
-Route::get('/usuario/desactivar/{id}','App\Http\Controllers\UsuarioController@desactivarUsuario' );
+Route::get('/usuario/desactivar/{id}','App\Http\Controllers\UsuarioController@desactivarUsuario');
 
 Route::put('/usuarios/{id}','App\Http\Controllers\UsuarioController@actualizarUsuario');
 
@@ -49,7 +51,7 @@ Route::post('/usuario/imagen', 'App\Http\Controllers\UsuarioController@addImagen
 
 Route::get('usuario/activar/{id}', 'App\Http\Controllers\UsuarioController@activarUsuario');
 
-Route::get('/usuario/tecnicos','App\Http\Controllers\UsuarioController@tecnicosUsuarios' );
+Route::get('/usuario/tecnicos','App\Http\Controllers\UsuarioController@tecnicosUsuarios');
 
 /* rutas para incidencias */
 

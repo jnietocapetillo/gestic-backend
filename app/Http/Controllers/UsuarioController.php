@@ -71,6 +71,28 @@ class UsuarioController extends Controller
     }
 
     /**
+    *   funcion que inicia sesion desde google
+     */
+    function loginGoogle(Request $request)
+    {
+        header('Access-Control-Allow-Origin: *'); 
+        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+
+        $json = file_get_contents('php://input');
+        $datos = json_decode($json);
+
+        $usuario = User::where('email',$datos->email)->first();
+
+        $response = [
+            'estado'=>200,
+            'datos' => $usuario
+        ];
+
+        header('Content-Type: application/json');
+        return json_encode($response);
+    }
+
+    /**
      *   funcion que devuelve un usuario especificado por el id
      */
 
@@ -205,7 +227,7 @@ class UsuarioController extends Controller
 
         $id_usuario = User::where('email',$datos->email)->first();
 
-        if (!empty($id_usuario))
+        if (!is_null($id_usuario))
             $respuesta = $id_usuario->idusuario;
         else    
             $respuesta = 201;
