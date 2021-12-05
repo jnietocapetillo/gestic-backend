@@ -38,7 +38,7 @@ class MensajeController extends Controller
 
             //log del sistema
             $fecha = new DateTime();
-            $usuario = User::where('idusuario',$nuevo_mensaje->idusuario_origen)->first();
+            $usuario = User::where('idusuario',$datos->idusuario_origen)->first();
             log::insert([
                     'tipo_acceso' => 'add mensaje',
                     'idusuario' => $usuario->nombre.' '.$usuario->apellidos,

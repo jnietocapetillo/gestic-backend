@@ -15,7 +15,7 @@ class envioCorreos extends Controller
        
         $json = file_get_contents('php://input'); //recibimos el json de angular
         $parametros = json_decode($json);// decodifica el json y lo guarda en paramentros
-        
+        return($parametros);
         try{
             Mail::to($parametros->para)->send(new \App\Mail\Emails($parametros));
             $resultado = 200;
@@ -35,12 +35,4 @@ class envioCorreos extends Controller
         return json_encode($respuesta);
     }
 
-    function prueba()
-    {
-        $datos = [
-            'usuario' => 'yo mismo',
-            'mensaje' => 'holaaaaaaa'
-        ];
-        return view('mails.email_envio', ['datos' => $datos]);
-    }
 }

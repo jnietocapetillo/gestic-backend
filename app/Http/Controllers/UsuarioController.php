@@ -221,12 +221,12 @@ class UsuarioController extends Controller
     {
         header('Access-Control-Allow-Origin: *'); 
         header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
-
+       
         $json = file_get_contents('php://input');
         $datos = json_decode($json);
 
         $id_usuario = User::where('email',$datos->email)->first();
-
+        
         if (!is_null($id_usuario))
             $respuesta = $id_usuario->idusuario;
         else    
@@ -308,26 +308,27 @@ class UsuarioController extends Controller
                 'email' => $datos ->email,
                 'password' => $pass,
                 'activo' => 0,
-                'idDepartamento' =>$datos->departamento,
-                'idPerfil' => $datos->perfil,
+                'idDepartamento' =>$datos->idDepartamento,
+                'idPerfil' => $datos->idPerfil,
                 'movil' => $datos -> movil,
                 'domicilio' => $datos ->domicilio,
                 'localidad' => $datos ->localidad,
-                'municipio' => $datos->provincia,
+                'municipio' => $datos->municipio,
                 'codigo_postal' =>$datos -> codigo_postal,
-                'avatar' =>$datos ->imagen
+                'avatar' =>$datos ->avatar
                 ]);
 
                 //log del sistema
                 $fecha = new DateTime();
                 log::insert([
                     'tipo_acceso' => 'add user',
-                    'idusuario' => $addUser->nombre.' '.$addUser->apellidos,
+                    'idusuario' => $datos->nombre.' '.$datos->apellidos,
                     'fecha' => $fecha
                 ]);
                 DB::commit();
             }catch(Exception $e){
                 DB::rollBack();
+                $estado = 201;
             }
             
             

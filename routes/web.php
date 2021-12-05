@@ -33,7 +33,7 @@ Route::get('/usuario/detalle/{id}', 'App\Http\Controllers\UsuarioController@deta
 
 Route::post('/usuarios', 'App\Http\Controllers\UsuarioController@addUsuario');
 
-Route::post('/usuarios/idEmail', 'App\Http\Controllers\UsuarioController@idUsuarioEmail');
+Route::post('/usuario/idEmail', 'App\Http\Controllers\UsuarioController@idUsuarioEmail');
 
 Route::get('/usuario/idPerfil/{id}','App\Http\Controllers\UsuarioController@idUsuarioPerfil');
 

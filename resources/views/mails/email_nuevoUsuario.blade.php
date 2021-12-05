@@ -56,7 +56,7 @@
     <div class="contenedor">
         <img src="http://gestic/storage/logo.png" alt="" width="105px" height="100px">
         <hr>
-        <div class="d-flex flex-row pt-5 pb-5 justify-content-center border border-dark">
+        <div class="contenido">
                 <h4>SE HA DADO DE ALTA COMO USUARIO EN GESTIC</h4>
                 <h5 class="pt-3">DATOS DE ACCESO:</h5>
                 <h5>Correo: {{$datos -> email}}</h5>
