@@ -137,13 +137,13 @@ class MensajeController extends Controller
     /**
         funcion que envia una lista de todos los mensajes no leidos de un usuario especifico
      */
-    function mensajesNoLeidosUsuarios($dato)
+    function mensajesNoLeidosUsuarios($id)
     {
         header('Access-Control-Allow-Origin: *'); 
         header("Access-Control-Allow-Headers: *");
 
-        $mensajes = Mensaje::where('idusuario_receptor',$dato)->where('leido',0)->get();
-
+        $mensajes = Mensaje::where([['idusuario_receptor', $id], ['leido', 0]])->get();
+        
         if ($mensajes == null)
         {
             $devolver = [
@@ -202,16 +202,16 @@ class MensajeController extends Controller
         try{
             DB::beginTransaction();
             $updateMensaje = Mensaje::where('idmensaje',$id)->update(['leido'=>1]);
+            $mensajeUsuario = Mensaje::where('idmensaje',$id)->first();
 
             //log del sistema
             $fecha = new DateTime();
-            $usuario = User::where('idusuario',$updateMensaje->idusuario_origen)->first();
+            $usuario = User::where('idusuario',$mensajeUsuario->idusuario_origen)->first();
             log::insert([
                 'tipo_acceso' => 'marcado leido mensaje',
                 'idusuario' => $usuario->nombre.' '.$usuario->apellidos,
                 'fecha' => $fecha
             ]);
-            if ($updateMensaje)
                 $resultado = 200;
             DB::commit();
         

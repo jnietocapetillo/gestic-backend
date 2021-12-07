@@ -192,24 +192,23 @@ class UsuarioController extends Controller
         //debemos borrar las incidencias y mensajes asociados a este usuario
 
         $incidencias_usuario = Incidencia::where('idusuario',$id)->get();
+        try{
+            DB::beginTransaction();
+            foreach($incidencias_usuario as $incidencias)
+            {
+                $mensajes = Mensaje::where('idincidencia',$incidencias->idincidencia)->delete();
+            }
+            //borramos las incidencias
+            $incidencias_usuario = Incidencia::where('idusuario',$id)->delete();
 
-        foreach($incidencias_usuario as $incidencias)
-        {
-            $mensajes = Mensaje::where('idincidencia',$incidencias->idincidencia)->get();
-            $mensajes->delete();
-        }
-        //borramos las incidencias
-        $incidencias_usuario->delete();
-
-        //borramos el usuario
-        $usuario = User::where('idusuario',$id)->first();
-
-        $usuario ->delete();
-
-        if ($usuario)
+            //borramos el usuario
+            $usuario = User::where('idusuario',$id)->delete();
+            DB::commit();
             $respuesta = 200;
-        else    
+        }catch(Exception $e){
+            DB::rollBack();
             $respuesta = 201;
+        }
 
         return json_encode($respuesta);
     }
@@ -426,17 +425,9 @@ class UsuarioController extends Controller
                     'fecha' =>$fecha
             ]);
             DB::commit();
+            $respuesta = 200;
         }catch(Exception $e){
             DB::rollBack();
-        }
-        
-
-        if ($usuarioActivo)
-        {
-            $respuesta = 200;
-        }
-        else
-        {
             $respuesta = 201;
         }
 

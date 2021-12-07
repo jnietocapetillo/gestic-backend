@@ -13,6 +13,9 @@ class LogController extends Controller
      */
     function listado(){
 
+        header('Access-Control-Allow-Origin: *'); 
+        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+
         $listado = log::all();
 
         $respuesta = [

@@ -292,19 +292,16 @@ class IncidenciaController extends Controller
         header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
 
         //debemos borrar las incidencias y mensajes asociados a este usuario
-
-        $mensajes = Mensaje::where('idincidencia',$id)->get();
-
-        $mensajes->delete();
-
-        $incidencia = Incidencia::where('idincidencia',$id)->first();
-
-        $incidencia->delete();
-
-        if($incidencia)
+        try{
+            DB::beginTransaction();
+            $mensajes = Mensaje::where('idincidencia',$id)->delete();
+            $incidencia = Incidencia::where('idincidencia',$id)->delete();
+            DB::commit();
             $respuesta = 200;
-        else
+        }catch(Exception $e){
+            DB::rollBack();
             $respuesta = 201;
+        }
 
         return json_encode($respuesta);
     }

@@ -61,7 +61,7 @@ Route::post('/incidencia/add', 'App\Http\Controllers\IncidenciaController@addInc
 
 Route::get('/incidencia/{id}','App\Http\Controllers\IncidenciaController@detalle');
 
-Route::delete('/incidencias/{id}', 'App\Http\Controllers\IncidenciaController@deleteIncidencia');
+Route::delete('/incidencia/{id}', 'App\Http\Controllers\IncidenciaController@deleteIncidencia');
 
 Route::get('/incidencia/usuario/{id}','App\Http\Controllers\IncidenciaController@incidenciasUsuario' );
 
