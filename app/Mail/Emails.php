@@ -63,5 +63,10 @@ class Emails extends Mailable
             return $this->subject("Asignado técnico en incidencia")
             ->view('mails.email_asignadoTecnico',['datos'=> $this->details]);
         }
+        else if($this->details->tipo== 8)
+        {
+            return $this->subject("Recordatorio de Contraseña")
+            ->view('mails.email_recordar',['datos'=> $this->details]);
+        }
     }
 }

@@ -23,6 +23,8 @@ Route::get('/', function () {
 
 Route::post('/login','App\Http\Controllers\UsuarioController@login');
 
+Route::post('/loginapp','App\Http\Controllers\UsuarioController@loginApp');
+
 Route::post('/login/google','App\Http\Controllers\UsuarioController@loginGoogle');
 
 Route::post('/usuarios/reset', 'App\Http\Controllers\UsuarioController@resetPassword');
@@ -75,7 +77,7 @@ Route::post('incidencia/asignar', 'App\Http\Controllers\IncidenciaController@asi
 
 Route::post('/incidencias/tecnico', 'App\Http\Controllers\IncidenciaController@incidenciasTecnico');
 
-Route::put('/incidencia/update', 'App\Http\Controllers\IncidenciaController@updateIncidencia');
+Route::post('/incidencia/update', 'App\Http\Controllers\IncidenciaController@updateIncidencia');
 
 /* rutas para logs */
 

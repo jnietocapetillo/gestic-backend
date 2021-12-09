@@ -71,6 +71,47 @@ class UsuarioController extends Controller
     }
 
     /**
+    *  funcion para hacer login desde App Android
+     */
+    function loginApp(Request $request)
+    {
+        header('Access-Control-Allow-Origin: *'); 
+        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+
+        $json = file_get_contents('php://input');
+        $datos = json_decode($json);
+
+        $usuario = User::where('email',$datos->email)->first();
+        
+        if (empty($usuario))
+        {
+            $usuario=201;
+        }
+        else
+        {
+            //si existe el usuario veo si coinciden las contraseñas
+            if (password_verify($datos->password,$usuario->password))
+            {
+                //insertamos los log del sistema
+                $fecha = new DateTime();
+                log::insert([
+                    'tipo_acceso' => 'login user',
+                    'idusuario' => $usuario->nombre.' '.$usuario->apellidos,
+                    'fecha' => $fecha
+                ]);
+            }
+            else 
+            {
+               $usuario = 201;
+            }
+        } 
+
+        header('Content-Type: application/json');
+        return json_encode($usuario);
+    }
+
+
+    /**
     *   funcion que inicia sesion desde google
      */
     function loginGoogle(Request $request)
@@ -293,8 +334,7 @@ class UsuarioController extends Controller
         if ($existeUser == null)
         {
             $pass = password_hash($datos->password,PASSWORD_BCRYPT);
-            $fecha = new DateTime();
-            $estado = 200;
+            
             //insertamos usuario
             try 
             {
@@ -307,14 +347,14 @@ class UsuarioController extends Controller
                 'email' => $datos ->email,
                 'password' => $pass,
                 'activo' => 0,
-                'idDepartamento' =>$datos->idDepartamento,
-                'idPerfil' => $datos->idPerfil,
+                'idDepartamento' =>$datos->departamento,
+                'idPerfil' => $datos->perfil,
                 'movil' => $datos -> movil,
                 'domicilio' => $datos ->domicilio,
                 'localidad' => $datos ->localidad,
-                'municipio' => $datos->municipio,
+                'municipio' => $datos->provincia,
                 'codigo_postal' =>$datos -> codigo_postal,
-                'avatar' =>$datos ->avatar
+                'avatar' =>$datos ->imagen
                 ]);
 
                 //log del sistema
@@ -324,6 +364,7 @@ class UsuarioController extends Controller
                     'idusuario' => $datos->nombre.' '.$datos->apellidos,
                     'fecha' => $fecha
                 ]);
+                $estado = 200;
                 DB::commit();
             }catch(Exception $e){
                 DB::rollBack();
