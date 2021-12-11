@@ -75,6 +75,8 @@ class IncidenciaController extends Controller
         $json = file_get_contents('php://input');
         $datos = json_decode($json);
 
+        $desc = strip_tags($datos->descripcion);
+
         try{
             DB::beginTransaction();
 
@@ -86,13 +88,13 @@ class IncidenciaController extends Controller
             'estado' => $datos-> estado,
             'titulo' => $datos->titulo,
             'ubicacion' =>$datos ->departamento,
-            'descripcion' => $datos -> descripcion,
+            'descripcion' => $desc,
             'imagen' => $datos -> imagen
             ]);
 
             //log del sistema
             $fecha = new DateTime();
-            $usuario = User::where('idusuario',$nueva_incidencia->idusuario)->first();
+            $usuario = User::where('idusuario',$datos->idusuario)->first();
             log::insert([
                 'tipo_acceso' => 'add incidencia',
                 'idusuario' => $usuario->nombre.' '.$usuario->apellidos,
@@ -141,7 +143,7 @@ class IncidenciaController extends Controller
             DB::beginTransaction();
             $incidencia_creada = Incidencia::max('idincidencia');
 
-            $incidencia = Incidencia::where('idincidencia',$incidencia_creada)->update(['imagen'=>$ruta]);
+            $incidencia = Incidencia::where('idincidencia',$incidencia_creada)->update(['imagen'=>$nombreArchivo]);
 
             //log del sistema
             $fecha = new DateTime();

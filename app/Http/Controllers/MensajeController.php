@@ -22,7 +22,7 @@ class MensajeController extends Controller
 
         $json = file_get_contents('php://input');
         $datos = json_decode($json);
-        
+        $desc = strip_tags($datos->descripcion);
         $fecha = Date("Y-m-d H:i:s");
         try{
             DB::beginTransaction();
@@ -31,7 +31,7 @@ class MensajeController extends Controller
             'idusuario_origen' =>$datos->idusuario_origen,
             'idincidencia' => $datos-> idincidencia,
             'fecha' => $fecha,
-            'descripcion' => $datos -> descripcion,
+            'descripcion' => $desc,
             'leido' => $datos->leido,
             'imagen' => $datos -> imagen
             ]);

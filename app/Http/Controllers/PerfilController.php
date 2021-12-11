@@ -37,7 +37,7 @@ class PerfilController extends Controller
         header('Access-Control-Allow-Origin: *'); 
         header("Access-Control-Allow-Headers: *");
 
-        $idPerfil = Perfil::where('nombre','like',$nombre)->first();
+        $idPerfil = Perfil::where('nombre',$nombre)->first();
 
         if ($idPerfil != null)
         {

@@ -57,8 +57,8 @@
         <hr>
         <div class="contenido">           
                 <h4>HA RECIBIDO UN NUEVO MENSAJE</h4>
-                <h5>De: </h5>
-                <h5 class="mensaje">Mensaje: </h5>               
+                <h5>De: {{$datos->usuario}}</h5>
+                <h5 class="mensaje">Mensaje: {{$datos->mensaje}}</h5>               
                 <span>No responsa a este correo. Si necesita contactar, a través de la plataforma.</span>
         </div>
         <div class="pie">            

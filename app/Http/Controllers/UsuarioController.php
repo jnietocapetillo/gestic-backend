@@ -347,14 +347,14 @@ class UsuarioController extends Controller
                 'email' => $datos ->email,
                 'password' => $pass,
                 'activo' => 0,
-                'idDepartamento' =>$datos->departamento,
-                'idPerfil' => $datos->perfil,
+                'idDepartamento' =>$datos->idDepartamento,
+                'idPerfil' => $datos->idPerfil,
                 'movil' => $datos -> movil,
                 'domicilio' => $datos ->domicilio,
                 'localidad' => $datos ->localidad,
-                'municipio' => $datos->provincia,
+                'municipio' => $datos->municipio,
                 'codigo_postal' =>$datos -> codigo_postal,
-                'avatar' =>$datos ->imagen
+                'avatar' =>$datos ->avatar
                 ]);
 
                 //log del sistema
